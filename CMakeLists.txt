@@ -23,7 +23,8 @@ endif()
 # Local paths for IMAS-Matlab
 ################################################################################
 # Include local paths to eliminate AL_COMMON_PATH dependency
-include(ALLocalPaths)
+# Use full path since CMAKE_MODULE_PATH hasn't been configured yet
+include(${CMAKE_CURRENT_SOURCE_DIR}/common/cmake/ALLocalPaths.cmake)
 option( AL_DOWNLOAD_DEPENDENCIES "Automatically download assets from the AL git repository" ON )
 set( AL_CORE_GIT_REPOSITORY "https://github.com/iterorganization/IMAS-Core.git" CACHE STRING "Git repository of AL-core" )
 set( AL_CORE_VERSION "main" CACHE STRING "Git commit/tag/branch of AL-core" )
@@ -32,58 +33,56 @@ include(FetchContent)
 # Load AL-core library (used for the shared library)
 ################################################################################
 if(WIN32)
-    if( ${AL_DOWNLOAD_DEPENDENCIES} )
-      # FetchContent_Declare causing reursive call wrapped by vcpkg to _find_package
-      # So manually clone al-core here. Need fix in later release
-      set( al-core_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps/al-core-src" )
-      if( NOT EXISTS "${al-core_SOURCE_DIR}/.git" )
-        message( STATUS "Cloning al-core from ${AL_CORE_GIT_REPOSITORY}" )
-        execute_process(
-          COMMAND git clone "${AL_CORE_GIT_REPOSITORY}" "${al-core_SOURCE_DIR}"
-          RESULT_VARIABLE _GIT_CLONE_RESULT
-          ERROR_VARIABLE _GIT_CLONE_ERROR
-        )
-        if( _GIT_CLONE_RESULT )
-          message( FATAL_ERROR "Failed to clone al-core: ${_GIT_CLONE_ERROR}" )
-        endif()
-      endif()
-      # Checkout the specified version
+  if( ${AL_DOWNLOAD_DEPENDENCIES} )
+    # FetchContent_Declare causing reursive call wrapped by vcpkg to _find_package
+    # So manually clone al-core here. Need fix in later release
+    set( al-core_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps/al-core-src" )
+    if( NOT EXISTS "${al-core_SOURCE_DIR}/.git" )
+      message( STATUS "Cloning al-core from ${AL_CORE_GIT_REPOSITORY}" )
       execute_process(
-        COMMAND git fetch origin
-        WORKING_DIRECTORY "${al-core_SOURCE_DIR}"
-        RESULT_VARIABLE _GIT_FETCH_RESULT
+        COMMAND git clone "${AL_CORE_GIT_REPOSITORY}" "${al-core_SOURCE_DIR}"
+        RESULT_VARIABLE _GIT_CLONE_RESULT
+        ERROR_VARIABLE _GIT_CLONE_ERROR
       )
-      execute_process(
-        COMMAND git checkout "${AL_CORE_VERSION}"
-        WORKING_DIRECTORY "${al-core_SOURCE_DIR}"
-        RESULT_VARIABLE _GIT_CHECKOUT_RESULT
-        ERROR_VARIABLE _GIT_CHECKOUT_ERROR
-      )
-      if( _GIT_CHECKOUT_RESULT )
-        message( FATAL_ERROR "Failed to checkout ${AL_CORE_VERSION}: ${_GIT_CHECKOUT_ERROR}" )
-      endif()
-    else()
-      set( al-core_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../al-core" )
-      if( NOT IS_DIRECTORY "${al-core_SOURCE_DIR}" )
-        message( FATAL_ERROR "${al-core_SOURCE_DIR} does not exist. Set AL_DOWNLOAD_DEPENDENCIES=ON to download." )
+      if( _GIT_CLONE_RESULT )
+        message( FATAL_ERROR "Failed to clone al-core: ${_GIT_CLONE_ERROR}" )
       endif()
     endif()
-  else()
-    if( ${AL_DOWNLOAD_DEPENDENCIES} )
-      # Download common assets from the ITER git:
-      FetchContent_Declare(
-        al-core
-        GIT_REPOSITORY "${AL_CORE_GIT_REPOSITORY}"
-        GIT_TAG "${AL_CORE_VERSION}"
-      )
-    else()
-      FetchContent_Declare(
-        al-core
-        SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/../al-core"
-      )
+    # Checkout the specified version
+    execute_process(
+      COMMAND git fetch origin
+      WORKING_DIRECTORY "${al-core_SOURCE_DIR}"
+      RESULT_VARIABLE _GIT_FETCH_RESULT
+    )
+    execute_process(
+      COMMAND git checkout "${AL_CORE_VERSION}"
+      WORKING_DIRECTORY "${al-core_SOURCE_DIR}"
+      RESULT_VARIABLE _GIT_CHECKOUT_RESULT
+      ERROR_VARIABLE _GIT_CHECKOUT_ERROR
+    )
+    if( _GIT_CHECKOUT_RESULT )
+      message( FATAL_ERROR "Failed to checkout ${AL_CORE_VERSION}: ${_GIT_CHECKOUT_ERROR}" )
     endif()
-    
- endif()
+  elif ( ${AL_DEVELOPMENT_LAYOUT} )
+    set( al-core_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../al-core" )
+  endif()
+else()
+  if( ${AL_DOWNLOAD_DEPENDENCIES} )
+    # Download common assets from the ITER git:
+    FetchContent_Declare(
+      al-core
+      GIT_REPOSITORY "${AL_CORE_GIT_REPOSITORY}"
+      GIT_TAG "${AL_CORE_VERSION}"
+    )
+    FetchContent_MakeAvailable( al-core )
+  elseif ( ${AL_DEVELOPMENT_LAYOUT} )
+    FetchContent_Declare(
+      al-core
+      SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/../al-core"
+    )
+    FetchContent_MakeAvailable( al-core )
+  endif()
+  
 endif()
 
 # Define project

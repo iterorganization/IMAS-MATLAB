@@ -20,19 +20,18 @@ if(WIN32)
   endif()
 endif()
 
-# Configuration options for common assets
+# Local paths for IMAS-Matlab
 ################################################################################
+# Include local paths to eliminate AL_COMMON_PATH dependency
+include(ALLocalPaths)
 option( AL_DOWNLOAD_DEPENDENCIES "Automatically download assets from the AL git repository" ON )
 set( AL_CORE_GIT_REPOSITORY "https://github.com/iterorganization/IMAS-Core.git" CACHE STRING "Git repository of AL-core" )
 set( AL_CORE_VERSION "main" CACHE STRING "Git commit/tag/branch of AL-core" )
+
 include(FetchContent)
-# Load common assets
+# Load AL-core library (used for the shared library)
 ################################################################################
-if( DEFINED ENV{AL_COMMON_PATH} )
-  # Take common assets from the path in this environment variable instead of al-core
-  set( AL_COMMON_PATH $ENV{AL_COMMON_PATH} )
-else()
-  if(WIN32)
+if(WIN32)
     if( ${AL_DOWNLOAD_DEPENDENCIES} )
       # FetchContent_Declare causing reursive call wrapped by vcpkg to _find_package
       # So manually clone al-core here. Need fix in later release
@@ -69,7 +68,6 @@ else()
         message( FATAL_ERROR "${al-core_SOURCE_DIR} does not exist. Set AL_DOWNLOAD_DEPENDENCIES=ON to download." )
       endif()
     endif()
-    set( AL_COMMON_PATH "${al-core_SOURCE_DIR}/common" )
   else()
     if( ${AL_DOWNLOAD_DEPENDENCIES} )
       # Download common assets from the ITER git:
@@ -84,12 +82,9 @@ else()
         SOURCE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/../al-core"
       )
     endif()
-    FetchContent_MakeAvailable( al-core )
-    set( AL_COMMON_PATH "${al-core_SOURCE_DIR}/common" )
+    
  endif()
 endif()
-add_subdirectory( ${AL_COMMON_PATH} _common )
-
 
 # Define project
 ################################################################################
@@ -120,8 +115,6 @@ include( ALCore )
 if( AL_DOCS_ONLY )
   return()
 endif()
-
-
 # Dependencies
 ################################################################################
 find_package( Python3 REQUIRED COMPONENTS Interpreter )
@@ -130,8 +123,6 @@ if(WIN32)
 else()
  find_package( Matlab REQUIRED )
 endif()
-
-
 # Utility sources and target
 ################################################################################
 
@@ -149,7 +140,6 @@ if(WIN32)
   target_link_libraries( al-mex PUBLIC al Matlab::mex Matlab::mx )
   target_include_directories( al-mex PRIVATE src )
   target_include_directories( al-mex PUBLIC ${Matlab_INCLUDE_DIRS} )
-  target_include_directories( al-mex PUBLIC ${AL_COMMON_PATH}/../include )
 
   # Use separate (non-interleaved) complex API for compatibility
   target_compile_definitions( al-mex PUBLIC)
@@ -238,7 +228,7 @@ macro( GENERATE GENERATOR IS_C_GENERATOR OUTPUT_FILES )
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_dummy.txt
     COMMAND
-      ${_SAXONCHE_VENV_PYTHON} "${AL_COMMON_PATH}/xsltproc.py"
+      ${_SAXONCHE_VENV_PYTHON} "${AL_LOCAL_XSLTPROC_SCRIPT}"
         -xsl ${CMAKE_CURRENT_SOURCE_DIR}/${GENERATOR}.xsl
         -s ${IDSDEF}
         -o ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_output.xml
@@ -283,8 +273,6 @@ else()
     list( APPEND MEX_TARGETS "mex-${NAME}" )
   endmacro()
 endif()
-
-
 # These XSLs generate files in triplets, which are then compiled into one mex target
 foreach( METHOD_NAME allocate delete gen get get_sample get_slice init put put_slice rand validate )
   FILES_FROM_METHOD_NAME( OUTPUT_FILES ${METHOD_NAME} )

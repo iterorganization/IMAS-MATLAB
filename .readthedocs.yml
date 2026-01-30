@@ -10,21 +10,6 @@ build:
   tools:
     python: "3.11"
 
-  jobs:
-    post_checkout:
-      # Clone IMAS-Core (only if not already present)
-      - |
-        if [ ! -d "IMAS-Core" ]; then
-          git clone --depth 1 --branch develop \
-            https://github.com/iterorganization/IMAS-Core.git \
-            IMAS-Core
-        fi
-      - ls -la
-      - ln -sfn $PWD/IMAS-Core/common/doc_common $PWD/doc/doc_common
-      - ls -la doc/
-      - ls -la doc/doc_common/
-      - echo "Created symlink doc/doc_common -> IMAS-Core/common/doc_common"
-
 # Build documentation in the "doc" directory with Sphinx
 sphinx:
   configuration: doc/conf.py
@@ -35,11 +20,11 @@ formats:
   - pdf
   - epub
 
-# Optional but recommended, declare the Python requirements required
+# Optional but Python requirements required recommended, declare the
 # to build your documentation
 python:
   install:
-    - requirements: IMAS-Core/common/doc_common/requirements.txt
+    - requirements: doc/doc_common/requirements.txt
 
 # Submodules configuration (optional)
 submodules:

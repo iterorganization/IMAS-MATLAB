@@ -262,6 +262,8 @@ if(WIN32)
     target_include_directories( "mex-${NAME}" PRIVATE src )
     # Use separate (non-interleaved) complex API for compatibility
     target_compile_definitions( "mex-${NAME}" PUBLIC)
+    # Add /bigobj flag for large generated code files
+    target_compile_options( "mex-${NAME}" PRIVATE /bigobj )
     list( APPEND MEX_TARGETS "mex-${NAME}" )
   endmacro()
 else()

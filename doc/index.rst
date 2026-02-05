@@ -33,13 +33,13 @@ programming language.
    :maxdepth: 2
    :caption: Contents:
 
+   getting_started
    imas
    using_al
    load_store_ids
    use_ids
    imas_uri
    identifiers
-   conf
    plugins
 
 .. toctree::

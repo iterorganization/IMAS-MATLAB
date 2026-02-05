@@ -19,22 +19,9 @@ repositories:
     Layer plugins.
 -   Traditional (code-generated) High Level Interfaces
 
-    -   `al-cpp <https://git.iter.org/projects/IMAS/repos/al-cpp/browse>`__: C++ HLI
-    -   `al-fortran <https://git.iter.org/projects/IMAS/repos/al-fortran/browse>`__:
-        Fortran HLI
-    -   `al-java <https://git.iter.org/projects/IMAS/repos/al-java/browse>`__: Java HLI
     -   `al-matlab <https://git.iter.org/projects/IMAS/repos/al-matlab/browse>`__:
         MATLAB HLI
-    -   `al-python <https://git.iter.org/projects/IMAS/repos/al-python/browse>`__:
-        Python HLI
 
--   Non-generated code HLIs. The following High Level Interfaces load the Data
-    Dictionary definitions at runtime
-
-    -   `IMASPy <https://git.iter.org/projects/IMAS/repos/imaspy/browse>`__: alternative
-        Python HLI
-    -   `al-hdc <https://git.iter.org/projects/IMAS/repos/al-hdc/browse>`__: alternative
-        HLI based on the HDC (Hierarchical Data Containers) library
 
 The documentation on this page covers everything except the Non-generated HLIs, those
 are documented in their own projects.
@@ -42,13 +29,6 @@ are documented in their own projects.
 
 Development environment
 -----------------------
-
-.. note::
-
-    This is the first iteration of the development process after the Access Layer split.
-    The process is not set in stone or sacred. Please suggest improvements to the
-    development flow based on your experience, if you feel the process the can be
-    streamlined.
 
 See the :ref:`build prerequisites` section for an overview of modules you need to load
 when on SDCC or packages to install when using Ubuntu 22.04.
@@ -62,11 +42,7 @@ folder is not important).
     al-dev/                 # Feel free to name this folder however you want
     ├── al-core/
     ├── al-plugins/         # Optional
-    ├── al-cpp/             # Optional
-    ├── al-fortran/         # Optional
-    ├── al-java/            # Optional
-    ├── al-matlab/          # Optional
-    ├── al-python/          # Optional
+    ├── al-matlab/          
     └── data-dictionary/
 
 Then, when you configure a project for building (see :ref:`Configuration`), set the
@@ -135,9 +111,7 @@ The ``FetchContent`` CMake module for making :ref:`dependencies from other repos
 Documentation overview
 ----------------------
 
-The documentation is generated with Sphinx. Because the documentation of each HLI
-depends on the contents of the ``al-plugins`` and ``al-core`` repositories, it is
-configured with CMake. For more information on Sphinx, see the `Sphinx docs
+The documentation is generated with Sphinx. For more information on Sphinx, see the `Sphinx docs
 <https://www.sphinx-doc.org/en/master/>`__ and the `documentation of the theme
 (sphinx-immaterial) that we're using
 <https://jbms.github.io/sphinx-immaterial/index.html>`__.
@@ -153,88 +127,53 @@ Building the documentation
 ''''''''''''''''''''''''''
 
 Use the option ``-D AL_HLI_DOCS`` to enable building documentation. This will create a
-target ``al-<hli>-docs``, e.g. ``al-python-docs`` that will only build the
+target ``al-<hli>-docs``, e.g. ``al-matlab-docs`` that will only build the
 documentation. You could also use ``-D AL_DOCS_ONLY`` to only build the documentation,
 and nothing else.
 
 .. code-block:: console
     :caption: Example: building the documentation for the Python HLI
 
-    al-dev$ cd al-python
-    al-python$ # Configure cmake to only create the documentation:
-    al-python$ cmake -B build -D AL_HLI_DOCS -D AL_DOCS_ONLY
+    al-dev$ cd al-matlab
+    al-matlab$ # Configure cmake to only create the documentation:
+    al-matlab$ cmake -B build -D AL_HLI_DOCS -D AL_DOCS_ONLY
     [...]
-    al-python$ make -C build al-python-docs
+    al-matlab$ make -C build al-matlab-docs
     [...]
 
 
-CI and deployment overview
---------------------------
+GitHub Actions CI/CD pipeline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Main CI plans. These plans execute the script ``ci/build_and_test.sh`` in each of the
-repositories. This allows for easy reproduction of the CI plans on SDCC: just execute
-``bash ci/build_and_test.sh`` in a clone of the repository.
+In addition to the ITER CI systems, the IMAS-Matlab repository uses `GitHub Actions
+<https://github.com/features/actions>`__ for automated building and testing. The
+workflow is defined in `.github/workflows/build-and-test.yml
+<https://github.com/iterorganization/IMAS-Matlab/blob/main/.github/workflows/build-and-test.yml>`__.
 
--   `AL-Core <https://ci.iter.org/browse/IC8-ALCORE>`__ tests building the Access
-    Layer core. Note that there are no unit tests in this repository, the CI plan
-    only checks that the AL can be built successfully.
--   `AL-Cpp <https://ci.iter.org/browse/IC8-ALCPP>`__ builds and tests the C++ HLI.
--   `AL-Fortran <https://ci.iter.org/browse/IC8-ALFOR>`__ builds and tests the Fortran
-    HLI.
+This workflow:
 
-    .. note::
-        There are three Jobs inside this plan. One uses the GCC compilers, one uses the
-        Intel compilers and the third uses the NAGfor Fortran compiler.
+-   **Triggers**: Automatically runs on pushes to ``main``, ``develop``, and ``feature/**`` branches, 
+    on all pull requests to ``main`` and ``develop``, on release tags (``v*``), and can be triggered 
+    manually via ``workflow_dispatch``.
 
-        All three execute ``ci/build_and_test.sh``, but some set the ``CC``, ``CXX`` and
-        ``FC`` environment variables to select the compiler.
+-   **Platforms**: Currently tests on Ubuntu 24.04 with GCC 14 compiler and MATLAB R2023b.
 
--   `AL-Java <https://ci.iter.org/browse/IC8-ALJAVA>`__ builds and tests the Java HLI.
--   `AL-Matlab <https://ci.iter.org/browse/IC8-ALMAT>`__ builds and tests the Matlab HLI.
--   `AL-Python <https://ci.iter.org/browse/IC8-ALPY>`__ builds and tests the Python HLI.
+-   **Build steps**:
+    
+    1. Sets up Python 3.11 environment
+    2. Installs MATLAB using GitHub's official MATLAB action
+    3. Installs system dependencies (build-essential, cmake, pkg-config, etc.)
+    4. Caches Boost and pip packages for faster builds
+    5. Builds and optionally installs external dependencies (UDA, HDF5, etc.)
+    6. Configures the project with CMake
+    7. Compiles the code
+    8. Runs tests if enabled
 
-Documentation CI plan:
+-   **Backends tested**: Currently enables the HDF5 backend while MDSplus and UDA 
+    backends are disabled to simplify testing.
 
--   `Access Layer Doc <https://ci.iter.org/browse/IC8-ALDOC>`__ builds the AL
-    documentation for all HLIs (only on the ``main`` and ``develop`` branches). The
-    output of this CI plan is used to deploy the documentation to sharepoint with the
-    `Access-Layer doc deployment project
-    <https://ci.iter.org/deploy/viewDeploymentProjectEnvironments.action?id=1887895553>`__.
+-   **Build artifacts**: The workflow checks that the code compiles successfully and 
+    that all tests pass. Build logs are available in the GitHub Actions tab of the repository.
 
-Other CI plans:
-
--   `Data-Dictionary Dev <https://ci.iter.org/browse/IC8-DDDEV2>`__ builds and tests all
-    HLIs (develop branch) with the Data Dictionary branch that triggered the build.
-
-    This project is used to test the compatibility of new Data Dictionary developments
-    with the generated Access Layer HLIs. This CI plan is triggered for the develop
-    branches of the Data Dictionary, and with every PR in the Data-Dictionary
-    repository.
-
-    .. note::
-        The Main CI plans use the last released Data Dictionary version for testing.
-
--   `IMAS AL DEV <https://ci.iter.org/browse/IC8-ALDEV>`__ builds development modules
-    for all components. These modules are published to SDCC by the `IMAS AL DEV Deploy
-    <https://ci.iter.org/deploy/viewDeploymentProjectEnvironments.action?id=1908899846>`__
-    deployment project.
-
-    These development modules can be used on SDCC as follows:
-
-    .. code-block:: bash
-        :caption: Development modules based on the Data Dictionary ``develop/3`` branch
-
-        module use /work/imas/opt/bamboo_deploy/imas3-dev-modules/modules/all/
-        # For intel:
-        module load IMAS/develop3-develop-intel-2020b
-        # For foss:
-        module load IMAS/develop3-develop-foss-2020b
-
-    .. code-block:: bash
-        :caption: Development modules based on the Data Dictionary ``develop/4`` branch
-        
-        module use /work/imas/opt/bamboo_deploy/imas4-dev-modules/modules/all/
-        # For intel:
-        module load IMAS/develop4-develop-intel-2020b
-        # For foss:
-        module load IMAS/develop4-develop-foss-2020b
+You can monitor the status of builds and tests in the 
+`Actions <https://github.com/iterorganization/IMAS-Matlab/actions>`__ tab of the GitHub repository.

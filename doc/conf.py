@@ -51,7 +51,6 @@ extensions = [
 
 # todo_include_todos = True
 
-templates_path = ["./doc_common/templates"]
 # Note: exclude doc_common and plugins folders (which are symlinked by the CMake build)
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "doc_common", "plugins"]
 

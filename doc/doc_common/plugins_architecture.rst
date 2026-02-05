@@ -12,11 +12,6 @@ which receive HLIs requests. The LL includes a C layer with C functions
 (wrappers) for calling the functions of the (C++) LL API located in the
 C++ layer of the LL.
 
-.. figure:: ./doc_common/media/image1.png
-   :name: Figure 1
-
-   **Figure 1:** Layered AL architecture model
-
 When calling an AL API function (``get()``/``get_slice()``, ``put()``/``put_slice()``),
 the HLI iterates over all nodes of the IDS where each visited node is
 either a scalar, or an array (with dimensions from 1 to 6) or an array
@@ -52,40 +47,12 @@ plugins. It introduces new components:
 
 -  The C++ plugins
 
-From now on, the Low Level C wrappers call the Plugins API functions.
-The LL API is remained unchanged.
-
-.. figure:: ./doc_common/media/image2.png
-   :name: Figure 2
-
-   **Figure 2:** Modified layered AL architecture model for plugins
-   orchestration
-
 
 The C wrappers for plugins management
 -------------------------------------
 
 `Figure 3`_ displays the list of new C wrappers for plugins management and
 the new plugins API. The latter includes:
-
--  functions for plugins management (registering and binding to a node)
-
--  functions which allow plugins to override the behavior of the LL data
-   access functions
-
-In the new AL plugin architecture, HLIs call the current C wrappers, which call
-the new plugins API, which in turn call the plugins if they are registered and
-bound to at least one node of the DD. For example, the
-``al_begin_global_action(...)`` function calls the new plugins API
-``beginGlobalActionPlugin(...)`` function of the plugins API. The functions
-``al_read_data(...) and :code:``al_write_data(...)` delegate to the
-``readDataSPlugin(...)`` and ``writeDataPlugin(...)`` plugins API
-functions.
-
-.. figure:: ./doc_common/media/image3.png
-   :name: Figure 3
-
-   **Figure 3:** The new C wrappers for plugins management and the new plugins API
 
 Since the plugins API functions located in the LL C++ layer are not
 accessible from the HLIs, the new C wrappers depicted in `Figure 3`_ allow
@@ -107,11 +74,6 @@ The Plugins API and the low level holder plugin class
 -----------------------------------------------------
 
 `Figure 4`_ depicts the ``LLplugin`` plugin holder class.
-
-.. figure:: ./doc_common/media/image4.png
-   :name: Figure 4
-
-   **Figure 4:** The plugin holder class (``LLplugin``)
 
 
 Plugin registration
@@ -245,11 +207,6 @@ operation through sequence diagrams.
 ``get()`` sequence diagram
 --------------------------
 
-.. figure:: ./doc_common/media/image5.png
-   :name: Figure 7
-
-   **Figure 7:** ``get()`` operation sequence diagram
-
 `Figure 7`_ depicts an example of the ``get()`` operations sequence of a
 ``camera_ir`` IDS using the ``camera_ir`` plugin developed at WEST. The
 client code uses HLI operations to read data of a ``camera_ir`` IDS. In
@@ -279,11 +236,6 @@ HLI client using ``al_bind_plugin(...)``.
 The ``put()`` sequence diagram (`Figure 8`_) is quite similar to the ``get()``
 sequence diagram. The example uses the ``camera_ir_write`` plugin
 described later in this document.
-
-.. figure:: ./doc_common/media/image6.png
-   :name: Figure 8
-
-   **Figure 8:** ``put()`` operation sequence diagram
 
 Note that the wrapper ``al_begin_arraystruct_action(...)`` is called in this
 modified AL plugin architecture even if the corresponding array of
@@ -330,10 +282,4 @@ During a ``put()``/``put_slice()`` operation, the **readback**
 informations specified by the **readback_plugin_feature** interface are
 stored in the backend. These data are read during a ``get()``/``get_slice()``
 operation and used to bind and execute the *readback* plugins.
-
-.. figure:: ./doc_common/media/image7.png
-   :name: Figure 9
-
-   **Figure 9:** The ``provenance_plugin_feature``, ``readback_plugin_feature``
-   and ``access_layer_base_plugin`` interfaces
 

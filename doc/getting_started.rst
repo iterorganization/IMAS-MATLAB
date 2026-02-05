@@ -16,13 +16,13 @@ On the ITER SDCC (supercomputing cluster), make the Access Layer available:
 
 .. code-block:: bash
 
-    module load IMAS
+    module load IMAS-Matlab
 
 To see available versions:
 
 .. code-block:: bash
 
-    module avail IMAS
+    module avail IMAS-Matlab
 
 If you have a local installation, source the environment file instead:
 
@@ -41,7 +41,7 @@ where your data is stored and in what format.
 
     % Open a database entry
     uri = 'imas:hdf5?path=/path/to/data';
-    ctx = imas_open(uri, 40);  % 40 is the IMAS version
+    ctx = imas_open(uri, 40);  
     
     if ctx < 0
         error('Unable to open database');
@@ -62,7 +62,7 @@ Learn more: :ref:`Data entry URIs`
 3. Load and Display Data (1 min)
 --------------------------------
 
-Fetch an Integrated Data Structure (IDS) from your database entry:
+Fetch an IDS from your database entry:
 
 .. code-block:: matlab
 
@@ -129,7 +129,7 @@ Common Use Cases
 .. code-block:: matlab
 
     % Use CLOSEST interpolation
-    data = ids_get_slice(ctx, 'magnetics', 2.5, 'CLOSEST');
+    data = ids_get_slice(ctx, 'equilibrium', 2.5, 'CLOSEST');
 
 
 **Check if data exists:**
@@ -144,9 +144,9 @@ Common Use Cases
 **Access MATLAB examples:**
 
 The repository contains several example scripts in the ``examples/`` directory:
-- ``test_get.m`` – Load and display data
-- ``test_put.m`` – Store new data
-- ``test_get_sample_magnetics.m`` – Practical magnetics data example
+- ``test_get.m``  Load and display data
+- ``test_put.m``  Store new data
+- ``test_get_sample_magnetics.m``  Practical magnetics data example
 
 
 Next Steps
@@ -155,8 +155,8 @@ Next Steps
 - **Read more about IDSs**: :doc:`Use Interface Data Structures <identifiers>`
 - **Learn advanced loading/storing**: :doc:`Loading and storing IMAS data <load_store_ids>`
 - **Understand data storage**: :ref:`Data entry URIs`
-- **Check the full API documentation**: See your installed MATLAB help or visit the 
-  `IMAS Data Dictionary <https://imas-data-dictionary.readthedocs.io/>`__
+- **Check the full API documentation**: See your installed IMATLAB help or visit the 
+  `IMAS Matlab <https://imas-matlab.readthedocs.io>`__
 
 
 Troubleshooting
@@ -164,15 +164,11 @@ Troubleshooting
 
 **"Unable to open pulse" error:**
 - Check that your URI is correct and the data path exists
-- Verify the IMAS version number (typically 40 or higher)
-- Make sure the ``IMAS`` module is loaded
 
 **IDS not found:**
-- Check the IDS name spelling (case-sensitive)
 - Verify the data entry contains this IDS
 - Use ``ids_isdefined()`` to check existence first
 
 **Need help?**
 - Check the :doc:`Using the Access Layer <using_al>` guide
-- Review complete API documentation in your MATLAB installation
-- Consult the `IMAS Data Dictionary <https://imas-data-dictionary.readthedocs.io/>`__
+- Consult the `IMAS Matlab <https://imas-matlab.readthedocs.io/>`__

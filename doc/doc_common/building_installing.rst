@@ -1,11 +1,18 @@
 Building and installing the Access Layer
 ========================================
 
-This page describes how to build and install the Access Layer.
+This page describes how to build and install the Matlab Access Layer.
 
-Documentation for developers wishing to contribute to the Access Layer can be found in
+Documentation for developers wishing to contribute to the Matlab Access Layer can be found in
 the :ref:`Access Layer development guide`. Please refer to that guide if you wish to set
 up a development environment.
+
+For more information about related components, see:
+
+-   `IMAS Core Documentation <https://imas-core.readthedocs.io/en/latest/>`__
+-   `IMAS Data Dictionary Documentation <https://imas-data-dictionary.readthedocs.io/en/latest/>`__
+
+
 
 .. note::
 
@@ -23,7 +30,6 @@ To build the Access Layer you need:
 -   Git
 -   A C++11 compiler (tested with GCC and Intel compilers)
 -   CMake (3.16 or newer)
--   Saxon-HE XSLT processor
 -   Boost C++ libraries (1.66 or newer)
 -   PkgConfig
 
@@ -41,18 +47,10 @@ The following dependencies are only required for some of the components:
     and add its support by adding the CMake switch `-DENABLE_CAPNP=ON` when configuring UDA. 
 
 
--   High Level Interfaces
+-   MATLAB High Level Interface
 
-    -   All HLIs require the ``xsltproc`` program
-    -   **C++ High Level Interface**: Blitz++ libraries
-    -   **Fortran High Level Interface**: A fortran compiler, ideally with F2008 support
-        (tested with ``gfortran``, ``ifort`` and ``nagfor``)
-    -   **Java High Level Interface**: Java Development Kit and Java Native Interface
-        (tested with Java versions 11, 17 and 21)
     -   **MATLAB High Level Interface**: A working MATLAB installation (tested with
         version 2020b)
-    -   **Python High Level Interface**: Python (version 3.8 or newer) with the pip
-        packages ``build``, ``cython`` and ``numpy`` installed.
 
 
 
@@ -61,18 +59,19 @@ Standard environments:
 
 .. md-tab-set::
 
-    .. md-tab-item:: SDCC ``intel-2020b``
+    .. md-tab-item:: SDCC ``intel-2023b``
 
         The following modules provide all the requirements when using the
-        ``intel-2020b`` toolchain:
+        ``intel-2023b`` toolchain:
 
         .. code-block:: bash
 
-            module load intel/2020b CMake/3.24.3-GCCcore-10.2.0 Saxon-HE/11.4-Java-11 \
-                Boost/1.74.0-GCC-10.2.0 HDF5/1.10.7-iimpi-2020b \
-                MDSplus/7.96.17-GCCcore-10.2.0 MDSplus-Java/7.96.17-GCCcore-10.2.0-Java-11 \
-                UDA/2.7.4-GCCcore-10.2.0 Blitz++/1.0.2-GCCcore-10.2.0 \
-                MATLAB/2020b-GCCcore-10.2.0-Java-11 SciPy-bundle/2020.11-intel-2020b
+            module load intel-compilers/2023.2.1 CMake/3.27.6-GCCcore-13.2.0 Saxon-HE/12.4-Java-21 \
+                Boost/1.83.0-iimpi-2023b HDF5/1.14.3-iimpi-2023b \
+                MDSplus/7.132.0-GCCcore-13.2.0 \
+                UDA/2.8.1-iimpi-2023b Blitz++/1.0.2-GCCcore-13.2.0 \
+                MATLAB/2023b-r5-GCCcore-13.2.0 SciPy-bundle/2023.11-intel-2023b \
+                scikit-build-core/0.9.3-GCCcore-13.2.0
 
     .. md-tab-item:: SDCC ``foss-2023b``
 
@@ -84,9 +83,9 @@ Standard environments:
             module load CMake/3.27.6-GCCcore-13.2.0 Saxon-HE/12.4-Java-21 \
                 Boost/1.83.0-GCC-13.2.0 HDF5/1.14.3-gompi-2023b \
                 MDSplus/7.132.0-GCCcore-13.2.0 \
-                UDA/2.8.0-GCC-13.2.0 Blitz++/1.0.2-GCCcore-13.2.0 \
-                MATLAB/2023b-r5 SciPy-bundle/2023.11-gfbf-2023b \
-                build/1.0.3-foss-2023b
+                UDA/2.8.1-GCC-13.2.0 Blitz++/1.0.2-GCCcore-13.2.0 \
+                MATLAB/2023b-r5-GCCcore-13.2.0 SciPy-bundle/2023.11-gfbf-2023b \
+                build/1.0.3-foss-2023b scikit-build-core/0.9.3-GCCcore-13.2.0
 
         .. admonition:: The MATLAB/2023b-r5 installation is lightly tweaked
 
@@ -127,7 +126,7 @@ Standard environments:
 Building and installing a single High Level Interface
 -----------------------------------------------------
 
-This section explains how to install a single High Level Interface. Please make sure you
+This section explains how to install a Matlab High Level Interface. Please make sure you
 have the :ref:`build prerequisites` installed.
 
 
@@ -138,16 +137,8 @@ First you need to clone the repository of the High Level Interface you want to b
 
 .. code-block:: bash
 
-    # For the C++ HLI use:
-    git clone ssh://git@git.iter.org/imas/al-cpp.git
-    # For the Fortran HLI use:
-    git clone ssh://git@git.iter.org/imas/al-fortran.git
-    # For the Java HLI use:
-    git clone ssh://git@git.iter.org/imas/al-java.git
     # For the MATLAB HLI use:
     git clone ssh://git@git.iter.org/imas/al-matlab.git
-    # For the Python HLI use:
-    git clone ssh://git@git.iter.org/imas/al-python.git
 
 
 Configuration
@@ -159,7 +150,7 @@ overview of configuration options.
 
 .. code-block:: bash
 
-    cd al-cpp  # al-fortran, al-java, al-matlab or al-python
+    cd al-matlab  # al-fortran, al-java, al-cpp or al-python
     cmake -B build -D CMAKE_INSTALL_PREFIX=$HOME/al-install -D OPTION1=VALUE1 -D OPTION2=VALUE2 [...]
 
 .. note:: 
@@ -169,8 +160,8 @@ overview of configuration options.
 
     -   `imas-core (git@github.com:iterorganization/IMAS-Core.git)
         <https://github.com/iterorganization/IMAS-Core>`__
-    -   `al-plugins (ssh://git@git.iter.org/imas/al-plugins.git)
-        <https://git.iter.org/projects/IMAS/repos/al-plugins/browse>`__
+    -   `al-plugins (https://github.com/iterorganization/al-plugins.git)
+        <https://github.com/iterorganization/al-plugins>`__
     -   `imas-data-dictionary (git@github.com:iterorganization/IMAS-Data-Dictionary.git)
         <https://github.com/iterorganization/IMAS-Data-Dictionary>`__
 
@@ -184,7 +175,7 @@ overview of configuration options.
 
         cmake -B build \
             -D AL_CORE_GIT_REPOSITORY=git@github.com:iterorganization/IMAS-Core.git \
-            -D AL_PLUGINS_GIT_REPOSITORY=https://git.iter.org/scm/imas/al-plugins.git \
+            -D AL_PLUGINS_GIT_REPOSITORY=git@github.com:iterorganization/al-plugins.git \
             -D DD_GIT_REPOSITORY=git@github.com:iterorganization/IMAS-Data-Dictionary.git
 
     If you use CMake 3.21 or newer, you can also use the ``https`` preset:
@@ -202,7 +193,6 @@ You can instruct CMake to use compilers with the following environment variables
 
 -   ``CC``: C compiler, for example ``gcc`` or ``icc``.
 -   ``CXX``: C++ compiler, for example ``g++`` or ``icpc``.
--   ``FC``: Fortran compiler, for example ``gfortran``, ``ifort`` or ``nagfor``.
 
 If you don't specify a compiler, CMake will take a default (usually from the Gnu
 Compiler Collection).
@@ -291,7 +281,7 @@ Configuration options
         AL_CORE_GIT_REPOSITORY:     git@github.com:iterorganization/IMAS-Core.git
         AL_CORE_VERSION:            main
 
-        AL_PLUGINS_GIT_REPOSITORY:  ssh://git@git.iter.org/imas/al-plugins.git
+        AL_PLUGINS_GIT_REPOSITORY:  git@github.com:iterorganization/al-plugins.git
         AL_PLUGINS_VERSION:         main
 
         DD_GIT_REPOSITORY:          git@github.com:iterorganization/IMAS-Data-Dictionary.git

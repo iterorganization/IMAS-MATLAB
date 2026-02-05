@@ -348,7 +348,7 @@ if(_SAXONCHE_CHECK)
   endif()
 endif()
 
-set( list_idss_file ${CMAKE_CURRENT_SOURCE_DIR}/common/list_idss.xsl )
+set( list_idss_file ${CMAKE_SOURCE_DIR}/common/list_idss.xsl )
 set( CMAKE_CONFIGURE_DEPENDS ${CMAKE_CONFIGURE_DEPENDS};${list_idss_file};${IDSDEF} )
 set( ids_names_tmpfile "${CMAKE_CURRENT_BINARY_DIR}/ids_names_tmp.txt" )
 execute_process( COMMAND
@@ -372,10 +372,10 @@ endif()
 set( list_idss_file )  # unset temporary var
 
 # DD version
-set( dd_version_file ${CMAKE_CURRENT_SOURCE_DIR}/common/dd_version.xsl )
+set( dd_version_file ${CMAKE_SOURCE_DIR}/common/dd_version.xsl )
 set( dd_version_tmpfile "${CMAKE_CURRENT_BINARY_DIR}/dd_version_tmp.txt" )
 execute_process( COMMAND
-  ${_VENV_PYTHON} "${CMAKE_CURRENT_SOURCE_DIR}/common/xsltproc.py"
+  ${_VENV_PYTHON} "${AL_LOCAL_XSLTPROC_SCRIPT}"
     -xsl ${dd_version_file}
     -s ${IDSDEF}
     -o ${dd_version_tmpfile}

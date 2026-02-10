@@ -8,7 +8,7 @@ Welcome! This 5-minute guide will get you up and running with the IMAS-Matlab.
 IMAS-Matlab is the IMAS data access library (formerly known as the Access Layer) for Matlab users/developers. 
 
 
-1. Load the IMAS-Matlab Module
+Load the IMAS-Matlab Module
 -------------------------------
 
 On the ITER SDCC (supercomputing cluster), make the Access Layer available:
@@ -30,7 +30,7 @@ If you have a local installation, source the environment file instead:
     source <install_dir>/bin/al_env.sh
 
 
-1. Open MATLAB and Connect to Data
+Open MATLAB and Connect to Data
 -------------------------------------------
 
 Start MATLAB and open a database entry using an IMAS URI. A URI tells the Access Layer 
@@ -58,7 +58,7 @@ For example:
 Learn more: :ref:`Data entry URIs`
 
 
-3. Load and Display Dat
+Load and Display Dat
 ------------------------
 
 Fetch an IDS from your database entry:
@@ -74,7 +74,7 @@ Fetch an IDS from your database entry:
     disp(magnetics.flux_loop{1}.flux.data); % Access nested data
 
 
-1. Modify and Store Data
+Modify and Store Data
 ------------------------
 
 You can create new data, modify existing data, and store it back:
@@ -90,7 +90,7 @@ You can create new data, modify existing data, and store it back:
     ids_put(ctx, 'equilibrium', equilibrium);
 
 
-1. Clean Up
+Clean Up
 -----------
 
 Always close the database entry when you're done:

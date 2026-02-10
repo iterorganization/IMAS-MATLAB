@@ -1,7 +1,7 @@
 Access Layer - MATLAB High Level Interface
 ==========================================
 
-These pages document the MATLAB High Level Interface to the :ref:`IMAS <IMAS
+These pages document the MATLAB High Level Interface of the :ref:`IMAS <IMAS
 overview>` Access Layer. All code samples and API documentation will show how to
 use the access layer in the `MATLAB <https://en.wikipedia.org/wiki/MATLAB>`_
 programming language.

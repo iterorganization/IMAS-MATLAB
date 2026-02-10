@@ -103,21 +103,21 @@ Always close the database entry when you're done:
 Key Functions Reference
 -----------------------
 
-+------------------------------+----------------------------------------------------+
-| Function                     | Purpose                                            |
-+==============================+====================================================+
-| ``imas_open(uri, version)``  | Open a database entry at the given URI             |
-+------------------------------+----------------------------------------------------+
-| ``imas_close(ctx)``          | Close the database entry                           |
-+------------------------------+----------------------------------------------------+
-| ``ids_get(ctx, ids_name)``   | Load an entire IDS                                 |
-+------------------------------+----------------------------------------------------+
-| ``ids_put(ctx, ids_name, ids_obj)`` | Store an IDS to disk                      |
-+------------------------------+----------------------------------------------------+
-| ``ids_init(ids_name)``       | Create and initialize a new IDS                    |
-+------------------------------+----------------------------------------------------+
-| ``ids_get_slice(ctx, ids_name, time)`` | Load a specific time slice        |
-+------------------------------+----------------------------------------------------+
++====================================+=============================================+
+| Function                           | Purpose                                     |
++====================================+=============================================+
+| ``imas_open(uri, version)``        | Open a database entry at the given URI      |
++------------------------------------+---------------------------------------------+
+| ``imas_close(ctx)``                | Close the database entry                    |
++------------------------------------+---------------------------------------------+
+| ``ids_get(ctx, ids_name)``         | Load an entire IDS                          |
++------------------------------------+---------------------------------------------+
+| ``ids_put(ctx, ids_name, ids_obj)``| Store an IDS to disk                        |
++------------------------------------+---------------------------------------------+
+| ``ids_init(ids_name)``             | Create and initialize a new IDS             |
++------------------------------------+---------------------------------------------+
+| ``ids_get_slice(ctx, ids_name, time)`` | Load a specific time slice              |
++====================================+=============================================+
 
 
 Common Use Cases
@@ -158,8 +158,8 @@ Next Steps
   `IMAS-Matlab <https://imas-matlab.readthedocs.io>`__
 
 
-Troubleshooting
----------------
+Common Issues
+-------------
 
 **"Unable to open pulse" error:**
 - Check that your URI is correct and the data path exists

@@ -1,3 +1,5 @@
+.. _data entry uris:
+
 IMAS Data Entry URIs
 ====================
 
@@ -22,6 +24,13 @@ official IMAS Data Dictionary documentation:
 
 When you :ref:`load or store IMAS data <Loading and storing IMAS data>`, you need to provide 
 a data entry URI according to these specifications.
+
+.. note::
+
+    For detailed information about all backends, query keys, and backend-specific options,
+    please refer to the `IMAS URI Scheme documentation 
+    <https://imas-data-dictionary.readthedocs.io/en/latest/IMAS-URI-scheme.html>`__
+    in the IMAS Data Dictionary.
 
 
 

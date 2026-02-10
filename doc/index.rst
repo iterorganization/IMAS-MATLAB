@@ -18,7 +18,6 @@ programming language.
    use_ids
    imas_uri
    identifiers
-   plugins
 
 .. toctree::
    :caption: Examples 

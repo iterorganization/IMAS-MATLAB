@@ -17,7 +17,7 @@ For more information about related components, see:
 .. note::
 
     For Windows-specific installation instructions, please refer to the
-    :doc:`Windows Installation Guide <windows_setup>`.
+    :doc:`MATLAB on Windows <matlab_on_windows>` guide.
 
 
 .. _`build prerequisites`:

@@ -52,6 +52,7 @@ extensions = [
 # todo_include_todos = True
 
 # Note: exclude doc_common and plugins folders (which are symlinked by the CMake build)
+# Also exclude myenv (Python virtual environment)
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "doc_common", "plugins"]
 
 # -- RST snippets to include in every page -----------------------------------

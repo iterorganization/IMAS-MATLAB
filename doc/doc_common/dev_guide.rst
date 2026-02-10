@@ -15,11 +15,11 @@ repositories:
     <https://github.com/iterorganization/IMAS-Data-Dictionary>`__: the IMAS Data
     Dictionary definitions, used for generating MDSplus models and the traditional High
     Level Interfaces.
--   `al-plugins <https://git.iter.org/projects/IMAS/repos/al-plugins/browse>`__: Access
+-   `al-plugins <https://github.com/iterorganization/al-plugins/browse>`__: Access
     Layer plugins.
 -   Traditional (code-generated) High Level Interfaces
 
-    -   `al-matlab <https://git.iter.org/projects/IMAS/repos/al-matlab/browse>`__:
+    -   `al-matlab <https://github.com/iterorganization/IMAS-Matlab/browse>`__:
         MATLAB HLI
 
 
@@ -85,7 +85,7 @@ specifies which branch to use from each repository:
     ``al-core``.
 -   Inside the ``al-core`` repository, the commits to use for the
     ``al-plugins`` and ``data-dictionary`` are set in `ALCommonConfig.cmake
-    <https://git.iter.org/projects/IMAS/repos/al-core/browse/common/cmake/ALCommonConfig.cmake>`__.
+    <https://github.com/iterorganization/IMAS-Matlab/blob/develop/common/cmake/ALCommonConfig.cmake>`__.
 
     The default versions used are ``main`` for ``al-plugins``, and ``main`` for
     ``data-dictionary``.
@@ -120,7 +120,7 @@ Documentation of the HLI is inside the ``doc`` folder of the repository. This fo
 contains the configuration (``conf.py``), and documentation pages (``*.rst``).
 Documentation that is common to all High Level Interfaces (such as this developer guide)
 is in the `common/doc_common folder in the al-core repository
-<https://git.iter.org/projects/IMAS/repos/al-core/browse/common/doc_common>`__.
+<https://github.com/iterorganization/IMAS-Matlab/blob/develop/common/doc_common>`__.
 
 
 Building the documentation

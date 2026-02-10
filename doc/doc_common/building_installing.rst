@@ -138,7 +138,7 @@ First you need to clone the repository of the High Level Interface you want to b
 .. code-block:: bash
 
     # For the MATLAB HLI use:
-    git clone ssh://git@git.iter.org/imas/al-matlab.git
+    git clone git@github.com:iterorganization/IMAS-Matlab.git
 
 
 Configuration

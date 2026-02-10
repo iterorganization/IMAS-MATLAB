@@ -1,15 +1,14 @@
-Getting Started with IMAS-MATLAB
+Getting Started with IMAS-Matlab
 =================================
 
-Welcome! This 5-minute guide will get you up and running with the IMAS MATLAB Access Layer.
+Welcome! This 5-minute guide will get you up and running with the IMAS-Matlab.
 
-**What is IMAS-MATLAB?**
+**What is IMAS-Matlab?**
 
-The IMAS MATLAB Access Layer is a high-level interface that lets you load, manipulate, and store 
-data from ITER's Integrated Modeling and Analysis Suite (IMAS) directly in MATLAB. 
+IMAS-Matlab is the IMAS data access library (formerly known as the Access Layer) for Matlab users/developers. 
 
 
-1. Load the IMAS Module (2 min)
+1. Load the IMAS-Matlab Module
 -------------------------------
 
 On the ITER SDCC (supercomputing cluster), make the Access Layer available:
@@ -31,7 +30,7 @@ If you have a local installation, source the environment file instead:
     source <install_dir>/bin/al_env.sh
 
 
-2. Open MATLAB and Connect to Data (1 min)
+1. Open MATLAB and Connect to Data
 -------------------------------------------
 
 Start MATLAB and open a database entry using an IMAS URI. A URI tells the Access Layer 
@@ -59,8 +58,8 @@ For example:
 Learn more: :ref:`Data entry URIs`
 
 
-3. Load and Display Data (1 min)
---------------------------------
+3. Load and Display Dat
+------------------------
 
 Fetch an IDS from your database entry:
 
@@ -75,8 +74,8 @@ Fetch an IDS from your database entry:
     disp(magnetics.flux_loop{1}.flux.data); % Access nested data
 
 
-4. Modify and Store Data (1 min)
---------------------------------
+1. Modify and Store Data
+------------------------
 
 You can create new data, modify existing data, and store it back:
 
@@ -91,7 +90,7 @@ You can create new data, modify existing data, and store it back:
     ids_put(ctx, 'equilibrium', equilibrium);
 
 
-5. Clean Up
+1. Clean Up
 -----------
 
 Always close the database entry when you're done:
@@ -156,7 +155,7 @@ Next Steps
 - **Learn advanced loading/storing**: :doc:`Loading and storing IMAS data <load_store_ids>`
 - **Understand data storage**: :ref:`Data entry URIs`
 - **Check the full API documentation**: See your installed IMATLAB help or visit the 
-  `IMAS Matlab <https://imas-matlab.readthedocs.io>`__
+  `IMAS-Matlab <https://imas-matlab.readthedocs.io>`__
 
 
 Troubleshooting
@@ -171,4 +170,4 @@ Troubleshooting
 
 **Need help?**
 - Check the :doc:`Using the Access Layer <using_al>` guide
-- Consult the `IMAS Matlab <https://imas-matlab.readthedocs.io/>`__
+- Consult the `IMAS-Matlab <https://imas-matlab.readthedocs.io/>`__

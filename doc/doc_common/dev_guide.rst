@@ -19,7 +19,7 @@ repositories:
     Layer plugins.
 -   Traditional (code-generated) High Level Interfaces
 
-    -   `al-matlab <https://github.com/iterorganization/IMAS-Matlab/browse>`__:
+    -   `al-matlab <https://github.com/iterorganization/IMAS-MATLAB/browse>`__:
         MATLAB HLI
 
 
@@ -85,7 +85,7 @@ specifies which branch to use from each repository:
     ``al-core``.
 -   Inside the ``al-core`` repository, the commits to use for the
     ``al-plugins`` and ``data-dictionary`` are set in `ALCommonConfig.cmake
-    <https://github.com/iterorganization/IMAS-Matlab/blob/develop/common/cmake/ALCommonConfig.cmake>`__.
+    <https://github.com/iterorganization/IMAS-MATLAB/blob/develop/common/cmake/ALCommonConfig.cmake>`__.
 
     The default versions used are ``main`` for ``al-plugins``, and ``main`` for
     ``data-dictionary``.
@@ -120,7 +120,7 @@ Documentation of the HLI is inside the ``doc`` folder of the repository. This fo
 contains the configuration (``conf.py``), and documentation pages (``*.rst``).
 Documentation that is common to all High Level Interfaces (such as this developer guide)
 is in the `common/doc_common folder in the al-core repository
-<https://github.com/iterorganization/IMAS-Matlab/blob/develop/common/doc_common>`__.
+<https://github.com/iterorganization/IMAS-MATLAB/blob/develop/common/doc_common>`__.
 
 
 Building the documentation
@@ -145,10 +145,10 @@ and nothing else.
 GitHub Actions CI/CD pipeline
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In addition to the ITER CI systems, the IMAS-Matlab repository uses `GitHub Actions
+In addition to the ITER CI systems, the IMAS-MATLAB repository uses `GitHub Actions
 <https://github.com/features/actions>`__ for automated building and testing. The
 workflow is defined in `.github/workflows/build-and-test.yml
-<https://github.com/iterorganization/IMAS-Matlab/blob/main/.github/workflows/build-and-test.yml>`__.
+<https://github.com/iterorganization/IMAS-MATLAB/blob/main/.github/workflows/build-and-test.yml>`__.
 
 This workflow:
 
@@ -176,4 +176,4 @@ This workflow:
     that all tests pass. Build logs are available in the GitHub Actions tab of the repository.
 
 You can monitor the status of builds and tests in the 
-`Actions <https://github.com/iterorganization/IMAS-Matlab/actions>`__ tab of the GitHub repository.
+`Actions <https://github.com/iterorganization/IMAS-MATLAB/actions>`__ tab of the GitHub repository.

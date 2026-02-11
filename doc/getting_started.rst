@@ -1,27 +1,27 @@
-Getting Started with IMAS-Matlab
+Getting Started with IMAS-MATLAB
 =================================
 
-Welcome! This 5-minute guide will get you up and running with the IMAS-Matlab.
+Welcome! This 5-minute guide will get you up and running with the IMAS-MATLAB.
 
-**What is IMAS-Matlab?**
+**What is IMAS-MATLAB?**
 
-IMAS-Matlab is the IMAS data access library (formerly known as the Access Layer) for Matlab users/developers. 
+IMAS-MATLAB is the IMAS data access library (formerly known as the Access Layer) for Matlab users/developers. 
 
 
-Load the IMAS-Matlab Module
+Load the IMAS-MATLAB Module
 -------------------------------
 
 On the ITER SDCC (supercomputing cluster), make the Access Layer available:
 
 .. code-block:: bash
 
-    module load IMAS-Matlab
+    module load IMAS-MATLAB
 
 To see available versions:
 
 .. code-block:: bash
 
-    module avail IMAS-Matlab
+    module avail IMAS-MATLAB
 
 If you have a local installation, source the environment file instead:
 
@@ -155,7 +155,7 @@ Next Steps
 - **Learn advanced loading/storing**: :doc:`Loading and storing IMAS data <load_store_ids>`
 - **Understand data storage**: :ref:`Data entry URIs`
 - **Check the full API documentation**: See your installed IMATLAB help or visit the 
-  `IMAS-Matlab <https://imas-matlab.readthedocs.io>`__
+  `IMAS-MATLAB <https://imas-matlab.readthedocs.io>`__
 
 
 Common Issues
@@ -170,4 +170,4 @@ Common Issues
 
 **Need help?**
 - Check the :doc:`Using the Access Layer <using_al>` guide
-- Consult the `IMAS-Matlab <https://imas-matlab.readthedocs.io/>`__
+- Consult the `IMAS-MATLAB <https://imas-matlab.readthedocs.io/>`__

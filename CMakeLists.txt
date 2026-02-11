@@ -20,7 +20,7 @@ if(WIN32)
   endif()
 endif()
 
-# Local paths for IMAS-Matlab
+# Local paths for IMAS-MATLAB
 ################################################################################
 # Include local paths to eliminate AL_COMMON_PATH dependency
 # Use full path since CMAKE_MODULE_PATH hasn't been configured yet

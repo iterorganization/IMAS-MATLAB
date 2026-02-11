@@ -1,8 +1,8 @@
 function create_matlab_toolbox(installDir, outputDir, version, ddVersion)
-% CREATE_MATLAB_TOOLBOX Package IMAS-Matlab as a MATLAB toolbox
+% CREATE_MATLAB_TOOLBOX Package IMAS-MATLAB as a MATLAB toolbox
 % 
 % Arguments:
-%   installDir - Directory containing installed IMAS-Matlab files
+%   installDir - Directory containing installed IMAS-MATLAB files
 %   outputDir  - Directory where .mltbx file will be created
 %   version    - Version string (e.g., '5.5.0')
 %   ddVersion  - Data Dictionary version (e.g., '4.1.0')
@@ -56,10 +56,10 @@ try
     % Configure toolbox metadata
     fprintf('  Configuring toolbox metadata...\n');
     % Create a valid identifier (alphanumeric and hyphens only)
-    toolboxId = sprintf('imas-matlab-%s', strrep(version, '.', '-'));
+    toolboxId = sprintf('IMAS-MATLAB-%s', strrep(version, '.', '-'));
     opts = matlab.addons.toolbox.ToolboxOptions(packDir, toolboxId);
     
-    opts.ToolboxName = 'IMAS-Matlab';
+    opts.ToolboxName = 'IMAS-MATLAB';
     opts.ToolboxVersion = version;
     opts.AuthorName = 'ITER Organization';
     opts.Summary = sprintf('MATLAB interface for IMAS Access Layer - %s', fullVersionName);
@@ -118,7 +118,7 @@ startupFile = fullfile(packDir, 'imas_toolbox_startup.m');
 fid = fopen(startupFile, 'w');
 
 fprintf(fid, 'function imas_toolbox_startup()\n');
-fprintf(fid, '%% IMAS_TOOLBOX_STARTUP Initialize IMAS-Matlab toolbox\n');
+fprintf(fid, '%% IMAS_TOOLBOX_STARTUP Initialize IMAS-MATLAB toolbox\n');
 fprintf(fid, '%% Auto-generated startup script for %s\n\n', fullVersionName);
 fprintf(fid, '    toolboxRoot = fileparts(mfilename(''fullpath''));\n\n');
 fprintf(fid, '    %% Add to path\n');

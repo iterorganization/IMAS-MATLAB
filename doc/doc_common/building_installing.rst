@@ -138,7 +138,7 @@ First you need to clone the repository of the High Level Interface you want to b
 .. code-block:: bash
 
     # For the MATLAB HLI use:
-    git clone git@github.com:iterorganization/IMAS-Matlab.git
+    git clone git@github.com:iterorganization/IMAS-MATLAB.git
 
 
 Configuration
@@ -210,109 +210,7 @@ Compiler Collection).
 Configuration options
 '''''''''''''''''''''
 
--   **Backend configuration options**
-
-    -   ``AL_BACKEND_HDF5``, allowed values ``ON`` *(default)* or ``OFF``.
-        Enable/disable the HDF5 backend.
-    -   ``AL_BACKEND_MDSPLUS``, allowed values ``ON`` or ``OFF`` *(default)*.
-        Enable/disable the MDSplus backend.
-
-        -   ``AL_BUILD_MDSPLUS_MODELS``, allowed values ``ON`` *(default)* or ``OFF``,
-            only available when the MDSplus backend is enabled. Enable building MDSplus
-            models for the selected Data Dictionary version.
-
-    -   ``AL_BACKEND_UDA``, allowed values ``ON`` or ``OFF`` *(default)*. Enable/disable
-        the UDA backend.
-    -   ``AL_BACKEND_UDAFAT``, allowed values ``ON`` or ``OFF`` *(default)*.
-        Enable/disable the UDA backend and use FAT UDA instead of the client/server
-        model. See the `UDA documentation <https://ukaea.github.io/UDA/>`__ for more
-        information.
-
--   **Control what to build**
-
-    -   ``AL_EXAMPLES``, allowed values ``ON`` *(default)* or ``OFF``. Enable/disable
-        building the example programs in the ``examples`` directory.
-    -   ``AL_TESTS``, allowed values ``ON`` *(default)* or ``OFF``. Enable/disable
-        building the test programs in the ``tests`` folder.
-    -   ``AL_PLUGINS``, allowed values ``ON`` or ``OFF`` *(default)* . Enable/disable
-        building the plugins from the ``al-plugins`` repository.
-    -   ``AL_HLI_DOCS``, allowed values ``ON`` or ``OFF`` *(default)*. Enable/disable
-        building the documentation.
-    -   ``AL_DOCS_ONLY``, allowed values ``ON`` or ``OFF`` *(default)*. When enabled,
-        ONLY the documentation will be built (needs ``AL_HLI_DOCS=ON``). Regardless of
-        other configuration options, nothing else will be built.
-    -   ``AL_PYTHON_BINDINGS``, allowed values ``ON`` *(default when building the Python
-        HLI)* or ``OFF`` *(default when not building the Python HLI)*. When enabled, this
-        builds the Access Layer Python lowlevel bindings.
-
--   **Dependency configuration options**
-
-    -   ``AL_DOWNLOAD_DEPENDENCIES``, allowed values ``ON`` *(default)* or ``OFF``.
-        Enable or disable the automatic downloading of dependencies. Should be disabled
-        when using a :ref:`development environment <Access Layer development guide>`.
-
-    .. important::
-
-        The following environment variables must be set before the first time you
-        configure ``cmake``!
-
-        If you have an existing ``build`` folder and want to use a different compiler,
-        you should delete the ``build`` folder first, or use a differently named folder
-        for the build tree.
-
-    When ``AL_DOWNLOAD_DEPENDENCIES`` is enabled, the following settings can be used to
-    configure the location and/or version of the dependencies that should be used.
-    
-    -   ``AL_CORE_GIT_REPOSITORY``,
-        ``AL_PLUGINS_GIT_REPOSITORY``, ``DD_GIT_REPOSITORY``. Configure the git URLs
-        where the ``imas-core``, ``al-plugins`` c.q.
-        ``imas-data-dictionary`` repositories should be fetched from.
-    -   ``AL_CORE_VERSION``, ``AL_PLUGINS_VERSION``,
-        ``DD_VERSION``. Configure the version of the repository that should be used.
-        This can point to any valid branch name, tag or commit hash.
-
-        This setting can be used to control which version of the Data Dictionary you
-        want to use. For example: ``-D DD_VERSION=3.38.1`` will use DD version 3.38.1
-        instead of the default.
-
-    .. code-block:: text
-        :caption: Default values for ``*_GIT_REPOSITORY`` and ``*_VERSION`` options
-
-        AL_CORE_GIT_REPOSITORY:     git@github.com:iterorganization/IMAS-Core.git
-        AL_CORE_VERSION:            main
-
-        AL_PLUGINS_GIT_REPOSITORY:  git@github.com:iterorganization/al-plugins.git
-        AL_PLUGINS_VERSION:         main
-
-        DD_GIT_REPOSITORY:          git@github.com:iterorganization/IMAS-Data-Dictionary.git
-        DD_VERSION:                 main
-
--   **Useful CMake options**
-
-    -   ``CMAKE_INSTALL_PREFIX``. Configure the path where the Access Layer will be
-        installed, for example ``-D CMAKE_INSTALL_PREFIX=$HOME/al-install`` will install
-        the Access Layer inside the ``al-install`` folder in your home directory.
-    -   ``CMAKE_BUILD_TYPE``. Configure the build type for compiled languages.
-        Supported values (case sensitive):
-
-        -   ``Debug``: build with debug symbols and minimal optimizations.
-        -   ``Release``: build with optimizations enabled, without debug symbols.
-        -   ``RelWithDebInfo`` *(default)*: build with optimizations and debug symbols
-            enabled.
-        -   ``MinSizeRel``: build optimized for minimizing the size of the resulting
-            binaries.
-
-More advanced options are available as well, these can be used to configure where CMake
-searches for the prerequisite dependencies (such as the Boost libraries). To show all
-available configuration options, use the command-line tool ``ccmake`` or the gui tool
-``cmake-gui``:
-
-.. code-block:: bash
-
-    # for the CLI tool
-    ccmake -B build -S .
-    # for the GUI tool
-    cmake-gui -B build -S .
+For a complete list of available configuration options, please see the `IMAS Core Configuration Options <https://imas-core.readthedocs.io/en/latest/user_guide/installation.html#configuration-options>`__.
 
 
 Build the High Level Interface

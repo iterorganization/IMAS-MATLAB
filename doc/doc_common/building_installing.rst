@@ -4,7 +4,7 @@ Building and installing the IMAS-MATLAB
 This page describes how to build and install the IMAS-MATLAB.
 
 Documentation for developers wishing to contribute to the IMAS-MATLAB can be found in
-the :ref:`Access Layer development guide`. Please refer to that guide if you wish to set
+the :ref:`IMAS-MATLAB development guide`. Please refer to that guide if you wish to set
 up a development environment.
 
 For more information about related components, see:

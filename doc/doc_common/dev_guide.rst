@@ -1,25 +1,25 @@
-Access Layer development guide
+IMAS-MATLAB development guide
 ==============================
 
 
-Access Layer repositories
--------------------------
+Repositories
+------------
 
-The IMAS Access Layer consists of a number of components which are developed in separate
+The IMAS-MATLAB consists of a number of dependencies which are developed in separate
 repositories:
 
 -   `imas-core <https://github.com/iterorganization/IMAS-Core>`__: the
-    Access Layer core repository, MDSplus model generator and Python lowlevel
+    IMAS core repository, MDSplus model generator and Python lowlevel
     bindings.
 -   `data-dictionary
     <https://github.com/iterorganization/IMAS-Data-Dictionary>`__: the IMAS Data
     Dictionary definitions, used for generating MDSplus models and the traditional High
     Level Interfaces.
--   `al-plugins <https://github.com/iterorganization/al-plugins/browse>`__: Access
+-   `IMAS-Core-Plugins <https://github.com/iterorganization/IMAS-Core-Plugins/browse>`__: Access
     Layer plugins.
 -   Traditional (code-generated) High Level Interfaces
 
-    -   `al-matlab <https://github.com/iterorganization/IMAS-MATLAB/browse>`__:
+    -   `IMAS-MATLAB <https://github.com/iterorganization/IMAS-MATLAB/browse>`__:
         MATLAB HLI
 
 
@@ -33,8 +33,7 @@ Development environment
 See the :ref:`build prerequisites` section for an overview of modules you need to load
 when on SDCC or packages to install when using Ubuntu 22.04.
 
-The recommended development folder layout is to clone all :ref:`Access Layer
-repositories` in a single root folder (``al-dev`` in below example, but the name of that
+The recommended development folder layout is to clone all :ref:`Repositories` in a single root folder (``al-dev`` in below example, but the name of that
 folder is not important).
 
 .. code-block:: text
@@ -60,7 +59,7 @@ This setup allows you to develop in multiple repositories in parallel.
 Dependency management
 ---------------------
 
-With all Access Layer components spread over different repositories, managing
+With all IMAS-MATLAB dependencies spread over different repositories, managing
 dependencies is more complex than before. Below diagram expresses the dependencies
 between the different repositories:
 

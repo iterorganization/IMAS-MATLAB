@@ -13,7 +13,6 @@ For more information about related components, see:
 -   `IMAS Data Dictionary Documentation <https://imas-data-dictionary.readthedocs.io/en/latest/>`__
 
 
-
 .. note::
 
     For Windows-specific installation instructions, please refer to the

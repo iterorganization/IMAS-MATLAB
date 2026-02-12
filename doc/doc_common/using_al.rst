@@ -1,5 +1,3 @@
-.. _Using the Access Layer:
-
 Using the IMAS-MATLAB
 ======================
 

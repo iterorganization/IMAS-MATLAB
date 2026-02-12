@@ -6,9 +6,6 @@ overview>` Access Layer. All code samples and API documentation will show how to
 use the access layer in the `MATLAB <https://en.wikipedia.org/wiki/MATLAB>`_
 programming language.
 
-For more information, see the `IMAS Data Dictionary Introduction
-<https://imas-data-dictionary.readthedocs.io/en/latest/intro.html>`__.
-
 
 .. toctree::
    :maxdepth: 2

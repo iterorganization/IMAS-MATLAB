@@ -1,9 +1,9 @@
-Building and installing the Access Layer
+Building and installing the IMAS-MATLAB
 ========================================
 
-This page describes how to build and install the Matlab Access Layer.
+This page describes how to build and install the IMAS-MATLAB.
 
-Documentation for developers wishing to contribute to the Matlab Access Layer can be found in
+Documentation for developers wishing to contribute to the IMAS-MATLAB can be found in
 the :ref:`Access Layer development guide`. Please refer to that guide if you wish to set
 up a development environment.
 
@@ -25,7 +25,7 @@ For more information about related components, see:
 Prerequisites
 -------------
 
-To build the Access Layer you need:
+To build the IMAS-MATLAB you need:
 
 -   Git
 -   A C++11 compiler (tested with GCC and Intel compilers)
@@ -50,7 +50,7 @@ The following dependencies are only required for some of the components:
 -   MATLAB High Level Interface
 
     -   **MATLAB High Level Interface**: A working MATLAB installation (tested with
-        version 2020b)
+        version 2023b)
 
 
 
@@ -155,7 +155,7 @@ overview of configuration options.
 
 .. note:: 
 
-    CMake will automatically fetch dependencies from other Access Layer GIT repositories
+    CMake will automatically fetch dependencies from other IMAS-MATLAB GIT repositories
     for you. You may need to provide credentials to clone the following repositories:
 
     -   `imas-core (git@github.com:iterorganization/IMAS-Core.git)
@@ -266,7 +266,7 @@ Use the High Level Interface
 ````````````````````````````
 
 After installing the HLI, you need to ensure that your code can find the installed
-Access Layer. To help you with this, a file ``al_env.sh`` is installed. You can
+IMAS-MATLAB. To help you with this, a file ``al_env.sh`` is installed. You can
 ``source`` this file to set all required environment variables:
 
 .. code-block:: bash
@@ -288,7 +288,7 @@ Layer installation available for you.
     IMAS_VERSION=3.41.0``.
 
 Once you have set the required environment variables, you may continue :ref:`Using the
-Access Layer`.
+IMAS-MATLAB`.
 
 
 Troubleshooting

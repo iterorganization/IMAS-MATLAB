@@ -407,7 +407,7 @@ install( FILES ${CMAKE_CURRENT_SOURCE_DIR}/create_matlab_toolbox.m
   DESTINATION . )
 
 # Option to create MATLAB toolbox package during installation
-option(AL_CREATE_TOOLBOX "Automatically create MATLAB toolbox package during installation" ON)
+option(AL_CREATE_TOOLBOX "Automatically create MATLAB toolbox package during installation" OFF)
 
 # Get MATLAB executable path
 if(DEFINED Matlab_MAIN_PROGRAM)

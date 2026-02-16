@@ -212,6 +212,33 @@ Configuration options
 For a complete list of available configuration options, please see the `IMAS Core Configuration Options <https://imas-core.readthedocs.io/en/latest/user_guide/installation.html#configuration-options>`__.
 
 
+MATLAB-specific configuration options
+'''''''''''''''''''''''''''''''''''''
+
+The following options are specific to the MATLAB High Level Interface:
+
+- ``AL_CREATE_TOOLBOX``: Automatically create MATLAB toolbox package (``.mltbx``) during installation
+  
+  - **Default:** ``OFF``
+  - **Type:** Boolean
+  - **Description:** If set to ``ON``, the MATLAB toolbox package will be created automatically when you run 
+    ``cmake --install``. This requires MATLAB to be installed and available in your PATH. If disabled, you can 
+    create the toolbox manually at any time using the ``matlab-toolbox`` build target.
+  
+  - **Usage Examples:**
+  
+    - Enable during configuration::
+    
+        cmake -B build -DAL_CREATE_TOOLBOX=ON ...
+        cmake --install build
+    
+    - Create toolbox after installation (default)::
+    
+        cmake -B build ...
+        cmake --install build
+        cmake --build build --target matlab-toolbox
+
+
 Build the High Level Interface
 ``````````````````````````````
 

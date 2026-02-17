@@ -28,16 +28,6 @@ module load "${MODULES[@]}"
 echo "Done loading modules"
 set -x
 
-# Create a local git configuration with our access token
-if [ "x$bamboo_HTTP_AUTH_BEARER_PASSWORD" != "x" ]; then
-    mkdir -p git
-    echo "[http \"https://git.iter.org/\"]
-        extraheader = Authorization: Bearer $bamboo_HTTP_AUTH_BEARER_PASSWORD" > git/config
-    export XDG_CONFIG_HOME=$PWD
-    git config -l
-fi
-
-
 # Ensure the build directory is clean:
 rm -rf build
 
@@ -45,8 +35,8 @@ rm -rf build
 CMAKE_ARGS=(
     # Download dependencies from HTTPS (using an access token):
     -D AL_DOWNLOAD_DEPENDENCIES=${AL_DOWNLOAD_DEPENDENCIES:-ON}
-    -D AL_CORE_GIT_REPOSITORY=${AL_CORE_GIT_REPOSITORY:-https://git.iter.org/scm/imas/al-core.git}
-    -D AL_PLUGINS_GIT_REPOSITORY=${AL_PLUGINS_GIT_REPOSITORY:-https://git.iter.org/scm/imas/al-plugins.git}
+    -D AL_CORE_GIT_REPOSITORY=${AL_CORE_GIT_REPOSITORY:-https://github.com/iterorganization/IMAS-Core.git}
+    -D AL_PLUGINS_GIT_REPOSITORY=${AL_PLUGINS_GIT_REPOSITORY:-https://github.com/iterorganization/IMAS-Core-Plugins.git}
     -D DD_GIT_REPOSITORY=${DD_GIT_REPOSITORY:-https://github.com/iterorganization/IMAS-Data-Dictionary.git}
     -D AL_PLUGINS_VERSION=${AL_PLUGINS_VERSION:-main}
     -D AL_CORE_VERSION=${AL_CORE_VERSION:-main}

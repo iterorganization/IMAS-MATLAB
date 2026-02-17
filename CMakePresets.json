@@ -7,7 +7,7 @@
             "description": "Use https://github.com/ URLs instead of SSH URLs",
             "cacheVariables": {
                 "AL_CORE_GIT_REPOSITORY": "https://github.com/iterorganization/IMAS-Core.git",
-                "AL_PLUGINS_GIT_REPOSITORY": "https://git.iter.org/scm/imas/al-plugins.git",
+                "AL_PLUGINS_GIT_REPOSITORY": "https://github.com/iterorganization/IMAS-Core-Plugins.git",
                 "DD_GIT_REPOSITORY": "https://github.com/iterorganization/IMAS-Data-Dictionary.git"
             }
         }

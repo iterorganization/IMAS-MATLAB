@@ -42,7 +42,7 @@ foreach( M_FILE ${M_FILES_MDSPLUS} )
     message(STATUS "Disabling example ${M_FILE}: requires MDSplus backend")
   endif()
 
-  set_al_example_properties( example-mex-${M_FILE} ${DISABLED} OFF "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR}" )
+  set_al_example_properties( example-mex-${M_FILE} ${DISABLED} OFF "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
 
   if( AL_PLUGINS )
     add_test( NAME example-mex-${M_FILE}-with-plugins
@@ -51,7 +51,7 @@ foreach( M_FILE ${M_FILES_MDSPLUS} )
         -batch "addpath ${LIB_FOLDER} ${M_FOLDER}; ${M_FILE}; exit()"
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
-    set_al_example_properties( example-mex-${M_FILE}-with-plugins ${DISABLED} ON "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR}" )
+    set_al_example_properties( example-mex-${M_FILE}-with-plugins ${DISABLED} ON "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
   endif()
 endforeach()
 
@@ -70,7 +70,7 @@ foreach( M_FILE ${M_FILES_HDF5} )
     message(STATUS "Disabling example ${M_FILE}: requires HDF5 backend")
   endif()
 
-  set_al_example_properties( example-mex-${M_FILE} ${DISABLED} OFF "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR}" )
+  set_al_example_properties( example-mex-${M_FILE} ${DISABLED} OFF "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
 
   if( AL_PLUGINS )
     add_test( NAME example-mex-${M_FILE}-with-plugins
@@ -79,6 +79,6 @@ foreach( M_FILE ${M_FILES_HDF5} )
         -batch "addpath ${LIB_FOLDER} ${M_FOLDER}; ${M_FILE}; exit()"
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
-    set_al_example_properties( example-mex-${M_FILE}-with-plugins ${DISABLED} ON "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR}" )
+    set_al_example_properties( example-mex-${M_FILE}-with-plugins ${DISABLED} ON "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
   endif()
 endforeach()

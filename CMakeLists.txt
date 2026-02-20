@@ -231,18 +231,30 @@ macro( GENERATE GENERATOR IS_C_GENERATOR OUTPUT_FILES )
         -xsl ${CMAKE_CURRENT_SOURCE_DIR}/${GENERATOR}.xsl
         -s ${IDSDEF}
         -o ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_output.xml
-        --base-output-uri ${WORK_DIR}
         DD_GIT_DESCRIBE=${DD_VERSION}
         AL_GIT_DESCRIBE=${FULL_VERSION}
     COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_dummy.txt
     DEPENDS ${IDSDEF} ${GENERATOR}.xsl
-    WORKING_DIRECTORY ${WORK_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
   add_custom_target( al-mex-source-${GENERATOR}
     COMMAND ${CMAKE_COMMAND} -E echo ""
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_dummy.txt
     BYPRODUCTS ${GENERATED_FILENAMES}
   )
+  
+  # For non-C generators (e.g., matlab/IDS_list.m), copy generated files from build to source dir
+  if( NOT ${IS_C_GENERATOR} )
+    foreach( OUTPUT_FILE ${OUTPUT_FILES} )
+      add_custom_command(
+        TARGET al-mex-source-${GENERATOR} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          ${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_FILE}
+          ${CMAKE_CURRENT_SOURCE_DIR}/${OUTPUT_FILE}
+      )
+    endforeach()
+  endif()
+  
   add_dependencies( al-mex-sources al-mex-source-${GENERATOR} )
 endmacro()
 

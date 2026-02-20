@@ -38,12 +38,6 @@ def parse_arguments() -> tuple:
         required=True,
         help="transformed output XML document",
     )
-    parser.add_argument(
-        "--base-output-uri",
-        type=str,
-        default=None,
-        help="Base URI for resolving relative paths in xsl:result-document",
-    )
 
     args, other_args = parser.parse_known_args()
     # Convert list of strings "key=value" into dict(key=value, ...)
@@ -52,19 +46,13 @@ def parse_arguments() -> tuple:
 
 
 def saxon_xsltproc(
-    source_file: str, stylesheet_file: str, output_file: str, base_output_uri: str = None, **kwargs
+    source_file: str, stylesheet_file: str, output_file: str, **kwargs
 ) -> None:
     with saxonche.PySaxonProcessor(license=False) as proc:
         xsltproc = proc.new_xslt30_processor()
         for key, value in kwargs.items():
             string_value = proc.make_string_value(value)
             xsltproc.set_parameter(key, string_value)
-        if base_output_uri is not None:
-            # Ensure the URI ends with '/' so relative paths in xsl:result-document
-            # resolve correctly against this directory rather than the -o output file
-            if not base_output_uri.endswith("/"):
-                base_output_uri += "/"
-            xsltproc.set_base_output_uri(base_output_uri)
         xsltproc.transform_to_file(
             source_file=source_file,
             stylesheet_file=stylesheet_file,
@@ -79,6 +67,5 @@ if __name__ == "__main__":
         source_file=args.source_file,
         stylesheet_file=args.stylesheet_file,
         output_file=args.output_file,
-        base_output_uri=args.base_output_uri,
         **other_kwargs,
     )

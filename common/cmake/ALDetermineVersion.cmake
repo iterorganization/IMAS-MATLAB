@@ -12,7 +12,18 @@ else()
   # Ask git for a describe:
   find_package( Git )
   if( GIT_EXECUTABLE )
-  # Generate a git-describe version string from Git repository tags
+    # Fetch tags first so that describe works correctly in that case.
+    execute_process(
+      COMMAND ${GIT_EXECUTABLE} fetch --tags --force
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      RESULT_VARIABLE _GIT_FETCH_ERROR_CODE
+      OUTPUT_QUIET
+      ERROR_QUIET
+    )
+    if( _GIT_FETCH_ERROR_CODE )
+      message( VERBOSE "git fetch --tags failed (offline build?), proceeding without fetching tags" )
+    endif()
+    # Generate a git-describe version string from Git repository tags
     execute_process(
       COMMAND ${GIT_EXECUTABLE} describe --tags --dirty
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

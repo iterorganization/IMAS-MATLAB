@@ -733,6 +733,10 @@ void getNodePath(char* path,
 		}
 		free(pathTokens[i]);
 	}
+	// TODO: free pathTokens elements in the loop above to avoid memory leak, but this causes an access violation on Windows, investigate further
+#ifdef _WIN32
+	free(pathTokens);
+#endif
 }
 
 /**

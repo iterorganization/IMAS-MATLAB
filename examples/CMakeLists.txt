@@ -41,7 +41,7 @@ foreach( M_FILE ${M_FILES_MDSPLUS} )
     set( DISABLED ON )
     message(STATUS "Disabling example ${M_FILE}: requires MDSplus backend")
   endif()
-
+  # Note: added ids_path for backward compatibility with IMAS-Core<5.6
   set_al_example_properties( example-mex-${M_FILE} ${DISABLED} OFF "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
 
   if( AL_PLUGINS )
@@ -51,6 +51,7 @@ foreach( M_FILE ${M_FILES_MDSPLUS} )
         -batch "addpath ${LIB_FOLDER} ${M_FOLDER}; ${M_FILE}; exit()"
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
+    # Note: added ids_path for backward compatibility with IMAS-Core<5.6
     set_al_example_properties( example-mex-${M_FILE}-with-plugins ${DISABLED} ON "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
   endif()
 endforeach()
@@ -69,7 +70,7 @@ foreach( M_FILE ${M_FILES_HDF5} )
     set( DISABLED ON )
     message(STATUS "Disabling example ${M_FILE}: requires HDF5 backend")
   endif()
-
+  # Note: added ids_path for backward compatibility with IMAS-Core<5.6
   set_al_example_properties( example-mex-${M_FILE} ${DISABLED} OFF "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
 
   if( AL_PLUGINS )
@@ -79,6 +80,7 @@ foreach( M_FILE ${M_FILES_HDF5} )
         -batch "addpath ${LIB_FOLDER} ${M_FOLDER}; ${M_FILE}; exit()"
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
+    # Note: added ids_path for backward compatibility with IMAS-Core<5.6
     set_al_example_properties( example-mex-${M_FILE}-with-plugins ${DISABLED} ON "MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR};ids_path=${MDSPLUS_MODEL_DIR}" )
   endif()
 endforeach()

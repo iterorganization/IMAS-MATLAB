@@ -180,39 +180,6 @@ set( MEX_TARGETS )
 
 add_custom_target( al-mex-sources ALL )
 
-# Setup Python venv for saxonche (used for XSLT transformations)
-if(WIN32)
-  set(_SAXONCHE_VENV_PYTHON "${CMAKE_CURRENT_BINARY_DIR}/saxonche_env/Scripts/python.exe")
-  set(_SAXONCHE_VENV_PIP "${CMAKE_CURRENT_BINARY_DIR}/saxonche_env/Scripts/pip.exe")
-else()
-  set(_SAXONCHE_VENV_PYTHON "${CMAKE_CURRENT_BINARY_DIR}/saxonche_env/bin/python")
-  set(_SAXONCHE_VENV_PIP "${CMAKE_CURRENT_BINARY_DIR}/saxonche_env/bin/pip")
-endif()
-
-# Create Python venv and install saxonche if not already done
-if(NOT EXISTS "${_SAXONCHE_VENV_PYTHON}")
-  message(STATUS "Creating Python virtual environment for saxonche...")
-  execute_process(
-    COMMAND ${Python3_EXECUTABLE} -m venv saxonche_env
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    RESULT_VARIABLE _VENV_EXITCODE
-  )
-  
-  if(_VENV_EXITCODE)
-    message(FATAL_ERROR "Failed to create Python venv for saxonche")
-  endif()
-  
-  message(STATUS "Installing saxonche in virtual environment...")
-  execute_process(
-    COMMAND ${_SAXONCHE_VENV_PIP} install saxonche
-    RESULT_VARIABLE _PIP_EXITCODE
-  )
-  
-  if(_PIP_EXITCODE)
-    message(FATAL_ERROR "Failed to install saxonche")
-  endif()
-  message(STATUS "saxonche installed successfully")
-endif()
 
 # Macro for source generation with saxonche (Python)
 macro( GENERATE GENERATOR IS_C_GENERATOR OUTPUT_FILES )
@@ -227,7 +194,7 @@ macro( GENERATE GENERATOR IS_C_GENERATOR OUTPUT_FILES )
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_dummy.txt
     COMMAND
-      ${_SAXONCHE_VENV_PYTHON} "${AL_LOCAL_XSLTPROC_SCRIPT}"
+      ${_VENV_PYTHON} "${AL_LOCAL_XSLTPROC_SCRIPT}"
         -xsl ${CMAKE_CURRENT_SOURCE_DIR}/${GENERATOR}.xsl
         -s ${IDSDEF}
         -o ${CMAKE_CURRENT_BINARY_DIR}/${GENERATOR}_output.xml
@@ -277,6 +244,10 @@ if(WIN32)
     target_compile_definitions( "mex-${NAME}" PUBLIC)
     # Add /bigobj flag for large generated code files
     target_compile_options( "mex-${NAME}" PRIVATE /bigobj )
+    # Ensure all source-generation targets finish before this MEX target compiles.
+    # Without this, parallel builds (cmake --build -j N) can race: the MEX target
+    # tries to compile BYPRODUCT files before al-mex-source-* has generated them.
+    add_dependencies( "mex-${NAME}" al-mex-sources )
     list( APPEND MEX_TARGETS "mex-${NAME}" )
   endmacro()
 else()
@@ -284,6 +255,10 @@ else()
   macro( ADD_IMAS_MEX NAME SOURCES )
     matlab_add_mex( NAME "mex-${NAME}" SRC ${SOURCES} LINK_TO al al-mex OUTPUT_NAME "${NAME}" )
     target_include_directories( "mex-${NAME}" PRIVATE src )
+    # Ensure all source-generation targets finish before this MEX target compiles.
+    # Without this, parallel builds (cmake --build -j N) can race: the MEX target
+    # tries to compile BYPRODUCT files before al-mex-source-* has generated them.
+    add_dependencies( "mex-${NAME}" al-mex-sources )
     list( APPEND MEX_TARGETS "mex-${NAME}" )
   endmacro()
 endif()

@@ -14,7 +14,7 @@ add_test( NAME al-mex-test
       -batch "addpath ${LIB_FOLDER} ${M_FOLDER}; res = runtests('imas_unit_tests');exit(~all([res.Passed]))"
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
+# Note: added ids_path for backward compatibility with IMAS-Core<5.6
 set( MATLAB_ENV "IMAS_AL_DISABLE_VALIDATE=1;IMAS_AL_DISABLE_OBSOLESCENT_WARNING=1;ids_path=${MDSPLUS_MODEL_DIR};MDSPLUS_MODELS_PATH=${MDSPLUS_MODEL_DIR}" )
 if( AL_BACKEND_HDF5 )
   # The HDF5 library built-in with matlab may conflict with the one that the AL

@@ -135,37 +135,6 @@ endif()
   if( NOT DD_IDENTIFIER_FILES )
     message( WARNING "No identifier XML files found in Data Dictionary at: ${IDSDEF}" )
   endif()
-  
-  # When using pre-installed DD, we still need venv for extracting IDS names and version
-  # Create Python venv and install saxonche if not already done
-  if(NOT EXISTS "${_VENV_PYTHON}")
-    execute_process(
-      COMMAND ${PYTHON_EXECUTABLE} -m venv dd_build_env
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      RESULT_VARIABLE _VENV_EXITCODE
-      OUTPUT_VARIABLE _VENV_OUTPUT
-      ERROR_VARIABLE _VENV_ERROR
-    )
-    
-    if(_VENV_EXITCODE)
-      message(STATUS "venv stdout: ${_VENV_OUTPUT}")
-      message(STATUS "venv stderr: ${_VENV_ERROR}")
-      message(FATAL_ERROR "Failed to create venv (exit code: ${_VENV_EXITCODE}). Ensure Python has venv module installed: python -m venv --help")
-    endif()
-
-    execute_process(
-      COMMAND ${_VENV_PIP} install saxonche
-      RESULT_VARIABLE _PIP_EXITCODE
-      OUTPUT_VARIABLE _PIP_OUTPUT
-      ERROR_VARIABLE _PIP_ERROR
-    )
-    
-    if(_PIP_EXITCODE)
-      message(STATUS "saxonche pip output: ${_PIP_OUTPUT}")
-      message(STATUS "saxonche pip error: ${_PIP_ERROR}")
-      message(FATAL_ERROR "Failed to install saxonche dependency (exit code: ${_PIP_EXITCODE}). Check network connectivity and Python wheel compatibility.")
-    endif()
-  endif()
 else()
   if(WIN32)
     # Build the DD from source using direct git commands:
@@ -323,30 +292,6 @@ else()
 endif()
 
 # Find out which IDSs exist and populate IDS_NAMES
-# Ensure saxonche is installed before using xsltproc.py
-# Check if saxonche is available in the venv
-execute_process(
-  COMMAND ${_VENV_PYTHON} -c "import saxonche"
-  RESULT_VARIABLE _SAXONCHE_CHECK
-  OUTPUT_QUIET
-  ERROR_QUIET
-)
-
-if(_SAXONCHE_CHECK)
-  message(STATUS "Installing saxonche in venv...")
-  execute_process(
-    COMMAND ${_VENV_PIP} install saxonche
-    RESULT_VARIABLE _PIP_EXITCODE
-    OUTPUT_VARIABLE _PIP_OUTPUT
-    ERROR_VARIABLE _PIP_ERROR
-  )
-  
-  if(_PIP_EXITCODE)
-    message(STATUS "saxonche pip output: ${_PIP_OUTPUT}")
-    message(STATUS "saxonche pip error: ${_PIP_ERROR}")
-    message(FATAL_ERROR "Failed to install saxonche dependency (exit code: ${_PIP_EXITCODE}). Check network connectivity and Python wheel compatibility.")
-  endif()
-endif()
 
 set( list_idss_file ${CMAKE_SOURCE_DIR}/common/list_idss.xsl )
 set( CMAKE_CONFIGURE_DEPENDS ${CMAKE_CONFIGURE_DEPENDS};${list_idss_file};${IDSDEF} )

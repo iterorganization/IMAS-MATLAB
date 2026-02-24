@@ -733,7 +733,6 @@ void getNodePath(char* path,
 		}
 		free(pathTokens[i]);
 	}
-	free(pathTokens);
 }
 
 /**

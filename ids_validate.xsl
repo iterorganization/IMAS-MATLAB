@@ -422,17 +422,17 @@ end_repl_str:
 
       /* Allow for 1D row vectors  */
       if (ndims == 1 &amp;&amp; dims[0] == 1) {
-        size_t needed = snprintf(NULL, 0, "%s,%d,%s","(",dims[1],")");
+        size_t needed = snprintf(NULL, 0, "%s,%zu,%s","(",dims[1],")");
         char  *result = malloc(needed+1);
-        sprintf(result,"%s,%d,%s","(",dims[1],")");
+        sprintf(result,"%s,%zu,%s","(",dims[1],")");
         return result;
       } else {
-        size_t needed = snprintf(NULL, 0, "%s%d","(",dims[0]);
-        for (int i=1;i&lt;rank;i++) needed = needed + snprintf(NULL, 0, ",%d",dims[i]);
+        size_t needed = snprintf(NULL, 0, "%s%zu","(",dims[0]);
+        for (int i=1;i&lt;rank;i++) needed = needed + snprintf(NULL, 0, ",%zu",dims[i]);
         needed = needed + snprintf(NULL, 0, ")");
         char  *result = malloc(needed+1);
-        sprintf(result,"%s%d","(",dims[0]);
-        for (int i=1;i&lt;rank;i++) sprintf(result,"%s,%d",result,dims[i]);
+        sprintf(result,"%s%zu","(",dims[0]);
+        for (int i=1;i&lt;rank;i++) sprintf(result,"%s,%zu",result,dims[i]);
         sprintf(result,"%s)",result);
         return result;
       }
@@ -576,9 +576,9 @@ end_repl_str:
                 sprintf(buffercoord, "%s OR %s",buffercoord,ctargetfield[target]);
               }
               if(spec_dim!=0) sprintf(buffercoord,"%s OR %d",buffercoord,spec_dim);
-              size_t needed = snprintf(NULL, 0, "Element '%s%s' has incorrect shape %s: its coordinate in dimension %d ('%s%s') has size %d.", crootpath, initialpath, getShapeStr(pfield,rank), cfield_dim,crootpath,ctargetfield[targetcpathid], targetFieldSize);
+              size_t needed = snprintf(NULL, 0, "Element '%s%s' has incorrect shape %s: its coordinate in dimension %d ('%s%s') has size %zu.", crootpath, initialpath, getShapeStr(pfield,rank), cfield_dim,crootpath,ctargetfield[targetcpathid], targetFieldSize);
               char  *buffer = malloc(needed+1);
-              sprintf(buffer, "Element '%s%s' has incorrect shape %s: its coordinate in dimension %d ('%s%s') has size %d.", crootpath, initialpath,getShapeStr(pfield,rank), cfield_dim,crootpath,ctargetfield[targetcpathid], targetFieldSize);
+              sprintf(buffer, "Element '%s%s' has incorrect shape %s: its coordinate in dimension %d ('%s%s') has size %zu.", crootpath, initialpath,getShapeStr(pfield,rank), cfield_dim,crootpath,ctargetfield[targetcpathid], targetFieldSize);
               strncpy(status.message, buffer, needed);
               /// --- replacement of each index by its value
               for (int k=0;k&lt;nbindices; k++) {
@@ -692,7 +692,7 @@ end_repl_str:
     const mxArray* data=NULL; 
     const mxArray* pfield=NULL;
     int idsTimeMode = IDS_TIME_MODE_UNKNOWN;
-    int timeSize;
+    int timeSize = 0;
     int isEmpty;
     int i1max, i2max, i3max, i4max, itimemax;
     int aosArraySize;

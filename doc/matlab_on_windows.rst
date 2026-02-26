@@ -2,6 +2,29 @@
 Windows Installation Guide
 ==========================================
 
+Known Limitations
+=================
+
+.. warning::
+
+   **IDS validation is not supported on Windows.**
+
+   The ``ids_validate`` MEX function and the automatic validation step that
+   normally runs inside ``ids_put`` / ``ids_put_slice`` are both **disabled** on
+   Windows builds. Calling ``ids_validate()`` directly will result in an error.
+
+   This is a known limitation tracked in
+   `GitHub issue #3 <https://github.com/iterorganization/IMAS-MATLAB/issues/3>`_.
+
+   As a consequence:
+
+   - The ``ids_validate`` MEX target is **not compiled** on Windows.
+   - ``ids_put`` and ``ids_put_slice`` skip the validation check on Windows and
+     write data directly without schema validation.
+   - Users are responsible for ensuring that the IDS data structure is correct
+     before calling ``ids_put`` or ``ids_put_slice`` on Windows.
+
+
 Windows Prerequisites
 =====================
 
@@ -14,6 +37,7 @@ Windows Prerequisites
 3. **CMake** (included with Visual Studio)
 
 4. **Python 3.8+** with venv module (verify with ``python --version``)
+
 
 
 Setup vcpkg
@@ -139,19 +163,6 @@ For example:
 This produces a file such as::
 
     C:\imas_matlab_release\IMAS-MATLAB_5.5.0-DD-4.1.1-win64.mltbx
-
-The package includes all MEX files, ``.m`` files, and the required runtime DLLs
-(``al.dll``, ``libal-mex.dll``, ``hdf5.dll``, ``pthreadVC3.dll``,
-``boost_filesystem*.dll``, etc.).
-
-.. note::
-
-    The vcpkg runtime DLLs (``hdf5.dll``, ``pthreadVC3.dll``,
-    ``boost_filesystem-vc143-mt-x64-1_90.dll``, ``dl.dll``, ``zlib1.dll``,
-    ``szip.dll``, ``aec.dll``) from
-    ``<BUILD_DIR>/vcpkg_installed/x64-windows/bin/`` must be present in the
-    ``<INSTALL_PATH>/toolbox/`` folder before packaging. The CMake install step
-    copies them automatically.
 
 
 Installing the MATLAB Toolbox
@@ -311,3 +322,7 @@ Windows Troubleshooting
   ``imas_toolbox_startup()`` has been called and the vcpkg DLLs are present in
   the toolbox folder (``hdf5.dll``, ``pthreadVC3.dll``,
   ``boost_filesystem-vc143-mt-x64-1_90.dll``, ``dl.dll``)
+- **IDS validation is not available on Windows** — ``ids_validate`` is not
+  compiled and validation is skipped inside ``ids_put`` / ``ids_put_slice``.
+  See `GitHub issue #3 <https://github.com/iterorganization/IMAS-MATLAB/issues/3>`_
+  for status and updates.

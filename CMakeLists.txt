@@ -263,22 +263,31 @@ else()
   endmacro()
 endif()
 # These XSLs generate files in triplets, which are then compiled into one mex target
-foreach( METHOD_NAME allocate delete gen get get_sample get_slice init put put_slice rand validate )
+# Note: ids_validate is not compiled on Windows (validate is unsupported on Windows)
+foreach( METHOD_NAME allocate delete gen get get_sample get_slice init put put_slice rand )
   FILES_FROM_METHOD_NAME( OUTPUT_FILES ${METHOD_NAME} )
   GENERATE( "ids_${METHOD_NAME}" 1 "${OUTPUT_FILES}" )
   ADD_IMAS_MEX( "ids_${METHOD_NAME}" "${OUTPUT_FILES}" )
 endforeach()
+if(NOT WIN32)
+  FILES_FROM_METHOD_NAME( OUTPUT_FILES validate )
+  GENERATE( "ids_validate" 1 "${OUTPUT_FILES}" )
+  ADD_IMAS_MEX( "ids_validate" "${OUTPUT_FILES}" )
+endif()
 
 # 'put' and 'put_slice' in addition need these sources:
 target_sources( "mex-ids_put" PRIVATE
   src/ids/delete_ids.c
-  src/ids/validate_ids.c
 )
 target_sources( "mex-ids_put_slice" PRIVATE
   src/ids/put_ids.c
   src/ids/delete_ids.c
-  src/ids/validate_ids.c
 )
+# validate_ids.c is not linked on Windows (validate is unsupported on Windows)
+if(NOT WIN32)
+  target_sources( "mex-ids_put" PRIVATE src/ids/validate_ids.c )
+  target_sources( "mex-ids_put_slice" PRIVATE src/ids/validate_ids.c )
+endif()
 
 # The ids_converter.xsl generates many targets:
 set( IDS_CONVERTER_SOURCES )

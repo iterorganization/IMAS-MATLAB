@@ -376,12 +376,18 @@ install( DIRECTORY matlab/ DESTINATION toolbox
 # The al library comes from al-core and may already be installed
 # Copy runtime dependencies to toolbox during install
 if(WIN32)
-  # On Windows, install runtime DLLs that MEX files depend on
+  # On Windows, install runtime DLLs that MEX files depend on.
+  # This includes both the AL DLLs (from bin/) and the vcpkg dependency DLLs
+  # (boost, hdf5, pthread, dl, zlib, szip, aec, etc.) needed by al.dll at runtime.
   install(CODE "
-    file(GLOB AL_RUNTIME_LIBS 
+    file(GLOB AL_RUNTIME_LIBS
       \"\${CMAKE_INSTALL_PREFIX}/bin/*.dll\"
     )
-    foreach(lib IN LISTS AL_RUNTIME_LIBS)
+    file(GLOB VCPKG_RUNTIME_LIBS
+      \"${CMAKE_BINARY_DIR}/vcpkg_installed/x64-windows/bin/*.dll\"
+    )
+    set(ALL_RUNTIME_LIBS \${AL_RUNTIME_LIBS} \${VCPKG_RUNTIME_LIBS})
+    foreach(lib IN LISTS ALL_RUNTIME_LIBS)
       file(COPY \"\${lib}\" DESTINATION \"\${CMAKE_INSTALL_PREFIX}/toolbox\")
     endforeach()
     message(STATUS \"Copied runtime libraries to toolbox folder\")

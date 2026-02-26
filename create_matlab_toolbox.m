@@ -137,7 +137,7 @@ fprintf(fid, '    %% Display version information\n');
 fprintf(fid, '    try\n');
 fprintf(fid, '        v = imas_versions();\n');
 fprintf(fid, '        fprintf(''Access Layer: %%s | Data Dictionary: %%s\\n'', ...\n');
-fprintf(fid, '                v.access_layer, v.data_dictionary);\n');
+fprintf(fid, '                v.al_version, v.dd_version);\n');
 fprintf(fid, '    catch ME\n');
 fprintf(fid, '        warning(''Could not retrieve version information: %%s'', ME.message);\n');
 fprintf(fid, '    end\n');

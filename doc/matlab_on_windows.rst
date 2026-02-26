@@ -111,6 +111,187 @@ Example MATLAB script to access IMAS data:
     disp(['Data Dictionary: ' m.ids_properties.version_put.data_dictionary]);
 
 
+Creating the MATLAB Toolbox Package
+====================================
+
+After a successful build and install, a self-contained ``.mltbx`` toolbox file can be
+created using the ``create_matlab_toolbox`` script included in the install directory.
+
+.. note::
+
+    The ``<INSTALL_PATH>/toolbox/`` folder must exist (produced by
+    ``cmake --build build --config Release --target install``) before packaging.
+
+Run the following from inside MATLAB:
+
+.. code-block:: matlab
+
+    create_matlab_toolbox('<INSTALL_PATH>', '<OUTPUT_PATH>', '<VERSION>', '<DD_VERSION>')
+
+For example:
+
+.. code-block:: matlab
+
+    create_matlab_toolbox('C:\imas_matlab_release', ...
+                          'C:\imas_matlab_release', ...
+                          '5.5.0', '4.1.1')
+
+This produces a file such as::
+
+    C:\imas_matlab_release\IMAS-MATLAB_5.5.0-DD-4.1.1-win64.mltbx
+
+The package includes all MEX files, ``.m`` files, and the required runtime DLLs
+(``al.dll``, ``libal-mex.dll``, ``hdf5.dll``, ``pthreadVC3.dll``,
+``boost_filesystem*.dll``, etc.).
+
+.. note::
+
+    The vcpkg runtime DLLs (``hdf5.dll``, ``pthreadVC3.dll``,
+    ``boost_filesystem-vc143-mt-x64-1_90.dll``, ``dl.dll``, ``zlib1.dll``,
+    ``szip.dll``, ``aec.dll``) from
+    ``<BUILD_DIR>/vcpkg_installed/x64-windows/bin/`` must be present in the
+    ``<INSTALL_PATH>/toolbox/`` folder before packaging. The CMake install step
+    copies them automatically.
+
+
+Installing the MATLAB Toolbox
+==============================
+
+**Option A – Double-click** the ``.mltbx`` file in Windows File Explorer.
+MATLAB opens and installs it automatically via the Add-On Manager.
+
+**Option B – From inside MATLAB:**
+
+.. code-block:: matlab
+
+    matlab.addons.install('C:\imas_matlab_release\IMAS-MATLAB_5.5.0-DD-4.1.1-win64.mltbx')
+
+The toolbox is installed to::
+
+    C:\Users\<username>\AppData\Roaming\MathWorks\MATLAB Add-Ons\Toolboxes\IMAS-MATLAB\
+
+
+Using the Installed Toolbox
+============================
+
+Initializing
+------------
+
+On Windows, run this at the start of every MATLAB session to register the DLL
+folder on the system ``PATH`` so that MEX files can locate their dependencies:
+
+.. code-block:: matlab
+
+    imas_toolbox_startup()
+
+Expected output::
+
+    IMAS-MATLAB/5.5.0-DD-4.1.1-win64 loaded successfully
+    Access Layer: 5.5.0+64-... | Data Dictionary: 4.1.1
+
+To run this automatically every session, add it to your MATLAB ``startup.m``:
+
+.. code-block:: matlab
+
+    % Open startup.m
+    edit(fullfile(userpath, 'startup.m'))
+
+    % Add the following line and save:
+    imas_toolbox_startup()
+
+Verifying the installation
+---------------------------
+
+.. code-block:: matlab
+
+    v = imas_versions()
+
+Expected output::
+
+    v =
+      struct with fields:
+          al_version: '5.5.0+64-...'
+         hli_version: '5.5.0+64-...'
+          dd_version: '4.1.1'
+
+Writing data
+------------
+
+.. code-block:: matlab
+
+    % Open / create a database entry  (mode 43 = FORCE_CREATE)
+    ctx = imas_open('imas:hdf5?path=C:/mydata', 43);
+    if ctx < 0, error('Unable to open database'); end
+
+    m = ids_gen('magnetics');
+    m.ids_properties.homogeneous_time = 1;
+    m.time = [1.0; 2.0; 3.0];
+    m.flux_loop{1}.flux.data = [10.0; 20.0; 30.0];
+
+    ids_put(ctx, 'magnetics', m);   % writes entire IDS (overwrites existing)
+    imas_close(ctx);
+
+Reading data
+------------
+
+.. code-block:: matlab
+
+    % Open existing database  (mode 40 = OPEN_PULSE)
+    ctx = imas_open('imas:hdf5?path=C:/mydata', 40);
+    if ctx < 0, error('Unable to open database'); end
+
+    m = ids_get(ctx, 'magnetics');
+    disp(m.time)
+    disp(m.flux_loop{1}.flux.data)
+
+    imas_close(ctx);
+
+Appending time slices
+----------------------
+
+.. code-block:: matlab
+
+    ctx = imas_open('imas:hdf5?path=C:/mydata', 43);
+
+    m = ids_gen('magnetics');
+    m.ids_properties.homogeneous_time = 1;
+
+    % Time slices must be appended in strictly increasing order
+    m.time = 1.0;  m.flux_loop{1}.flux.data = 10.0;
+    ids_put_slice(ctx, 'magnetics', m);
+
+    m.time = 2.0;  m.flux_loop{1}.flux.data = 20.0;
+    ids_put_slice(ctx, 'magnetics', m);
+
+    imas_close(ctx);
+
+``imas_open`` mode values
+--------------------------
+
++----+----------------------+----------------------------------------------+
+|Mode| Constant             | Description                                  |
++====+======================+==============================================+
+| 40 | ``OPEN_PULSE``       | Open existing entry (error if not found)     |
++----+----------------------+----------------------------------------------+
+| 41 | ``FORCE_OPEN_PULSE`` | Open entry, create if it does not exist      |
++----+----------------------+----------------------------------------------+
+| 42 | ``CREATE_PULSE``     | Create new entry (error if already exists)   |
++----+----------------------+----------------------------------------------+
+| 43 | ``FORCE_CREATE``     | Create entry, overwrite if it already exists |
++----+----------------------+----------------------------------------------+
+
+Uninstalling
+------------
+
+In MATLAB: **Home → Add-Ons → Manage Add-Ons** → find *IMAS-MATLAB* → **Uninstall**.
+
+Or from the command line:
+
+.. code-block:: matlab
+
+    matlab.addons.uninstall('IMAS-MATLAB')
+
+
 Run MATLAB Tests
 ================
 
@@ -126,3 +307,7 @@ Windows Troubleshooting
 - Verify Visual Studio C++ build tools are installed
 - Check that all dependencies are accessible at the specified network paths
 - Confirm Python installation with ``python --version``
+- If MEX files fail with *"The specified module could not be found"*, ensure
+  ``imas_toolbox_startup()`` has been called and the vcpkg DLLs are present in
+  the toolbox folder (``hdf5.dll``, ``pthreadVC3.dll``,
+  ``boost_filesystem-vc143-mt-x64-1_90.dll``, ``dl.dll``)

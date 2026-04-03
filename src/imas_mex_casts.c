@@ -274,6 +274,11 @@ al_status_t castCellToChar(mxArray ** data)
 
   numel = mxGetNumberOfElements(cellData);
 
+  if (numel == 0) {
+    *data = NULL;
+    return status;
+  }
+
   strings = malloc(numel*sizeof(char *));
   for (i = 0; i < numel; i++) {
     cell = mxGetCell(*data, (mwIndex) i);

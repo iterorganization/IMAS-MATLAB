@@ -975,6 +975,7 @@ al_status_t my_al_write_data(struct imas_mex_actionInfo * action, struct imas_me
 	if (field->datatype == CHAR_DATA && field->dim == 2) {
 		if (mxIsCell(data)) {
 			if (status.code >= 0) status = cast_status = castCellToChar((mxArray **) &data);
+			if (data == NULL) return (al_status_t) {0,""};
 		}
 	}
 

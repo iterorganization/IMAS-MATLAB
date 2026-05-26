@@ -32,10 +32,18 @@
 	  n<xsl:value-of select="$unique_name"/> = ntime;
 	</xsl:when>
 	<xsl:when test="@maxoccur='unbounded'">
+	  #ifdef _WIN32
+	  n<xsl:value-of select="$unique_name"/> = 1+rand()%4;
+	  #else
 	  n<xsl:value-of select="$unique_name"/> = 1+random()%4;
+	  #endif
 	</xsl:when>
 	<xsl:otherwise>
+	  #ifdef _WIN32
+	  n<xsl:value-of select="$unique_name"/> = 1+rand()%4;
+	  #else
 	  n<xsl:value-of select="$unique_name"/> = 1+random()%4;
+	  #endif
 	  n<xsl:value-of select="$unique_name"/> = n<xsl:value-of select="$unique_name"/> &lt; <xsl:value-of select="@maxoccur"/> ? n<xsl:value-of select="$unique_name"/> : <xsl:value-of select="@maxoccur"/>;
 	</xsl:otherwise>
       </xsl:choose>

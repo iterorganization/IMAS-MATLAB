@@ -13,18 +13,42 @@
 
 #define IMAS_MEX_UTILS_H
 
-/** \cond */
-
-extern const int EMPTY_INT;
-extern const double EMPTY_DOUBLE;
-extern const double EMPTY_COMPLEX[2];
-
-extern const int IDS_TIME_MODE_UNKNOWN;
-extern const int IDS_TIME_MODE_HETEROGENEOUS;
-extern const int IDS_TIME_MODE_HOMOGENEOUS;
-extern const int IDS_TIME_MODE_INDEPENDENT;
 
 #include "mex.h"
+
+// DLL export/import macro for Windows
+#ifdef _WIN32
+  #ifdef AL_MEX_BUILDING_DLL
+    #define AL_MEX_EXPORT __declspec(dllexport)
+  #else
+    #define AL_MEX_EXPORT __declspec(dllimport)
+  #endif
+  // Undef the deprecation macros to use the actual function names
+  // In R2018a+ these are #defined to "IsDeprecated" versions that don't link
+  #ifdef mxGetImagData
+    #undef mxGetImagData
+  #endif
+  #ifdef mxSetImagData
+    #undef mxSetImagData
+  #endif
+#else
+  // On non-Windows platforms, AL_MEX_EXPORT is empty
+  #define AL_MEX_EXPORT
+#endif
+
+/** \cond */
+
+AL_MEX_EXPORT extern const int EMPTY_INT;
+AL_MEX_EXPORT extern const double EMPTY_DOUBLE;
+AL_MEX_EXPORT extern const double EMPTY_COMPLEX[2];
+
+AL_MEX_EXPORT extern const int IDS_TIME_MODE_UNKNOWN;
+AL_MEX_EXPORT extern const int IDS_TIME_MODE_HETEROGENEOUS;
+AL_MEX_EXPORT extern const int IDS_TIME_MODE_HOMOGENEOUS;
+AL_MEX_EXPORT extern const int IDS_TIME_MODE_INDEPENDENT;
+
+/** \endcond */
+
 #include "al_lowlevel.h"
 #include "imas_mex_params.h"
 #include "imas_mex_casts.h"
@@ -34,8 +58,17 @@ extern const int IDS_TIME_MODE_INDEPENDENT;
 #include <stdio.h>
 #include <ctype.h>
 #include <time.h>
-#include <sys/time.h>
-#include <unistd.h>
+
+#ifdef _WIN32
+  #include <windows.h>
+  #include <io.h>
+  // Windows doesn't have sys/time.h or unistd.h
+  // gettimeofday() is implemented in imas_mex_utils.c
+#else
+  #include <sys/time.h>
+  #include <unistd.h>
+#endif
+
 #include <errno.h>
 #ifdef NO_MXISSCALAR
 #define mxIsScalar(a) (mxGetNumberOfElements(a)==1)
@@ -91,15 +124,25 @@ struct imas_mex_fieldInfo {
   int dim;             /*!< Rank of the current field. */
 };
 
-/** \cond */
-extern const char * mex_errmsgid;
-extern char mex_errmsgtxt[MAXERRMSGTXTSIZE];
-extern int msglen;
-extern int msg_haspathinfo;
+#ifdef _WIN32
+  /** \cond */
+  AL_MEX_EXPORT extern const char * mex_errmsgid;
+  AL_MEX_EXPORT extern char mex_errmsgtxt[MAXERRMSGTXTSIZE];
+  AL_MEX_EXPORT extern int msglen;
+  AL_MEX_EXPORT extern int msg_haspathinfo;
+#else
+  /** \cond */
+  extern const char * mex_errmsgid;
+  extern char mex_errmsgtxt[MAXERRMSGTXTSIZE];
+  extern int msglen;
+  extern int msg_haspathinfo;
+#endif
 
-char * itoa(int );
+#ifndef _WIN32
+  char * itoa(int );
 
-int atoi(const char *);
+  int atoi(const char *);
+#endif
 
 char* concat(const char *, const char *);
 

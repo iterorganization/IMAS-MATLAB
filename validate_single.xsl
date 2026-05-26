@@ -52,7 +52,7 @@
           }
         }
       }
-      if ((scalar_time == EMPTY_DOUBLE)) { 
+      if (scalar_time == EMPTY_DOUBLE) { 
         size_t needed = snprintf(NULL, 0, "Time coordinate of '<xsl:value-of select="@name"/>' ('<xsl:value-of select="@name"/>(%d)/time') has empty values.", itime+1);
         char *buffer = malloc(needed + 1);
         sprintf(buffer, "Time coordinate of '<xsl:value-of select="@name"/>' ('<xsl:value-of select="@name"/>(%d)/time') has empty values.", itime+1);
@@ -891,7 +891,7 @@
                 }
               }
               }
-              if ((scalar_time == EMPTY_DOUBLE)) { 
+              if (scalar_time == EMPTY_DOUBLE) { 
                 size_t needed = snprintf(NULL, 0, "Time coordinate of '<xsl:value-of select="@name"/>' ('<xsl:value-of select="@name"/>(%d)/time') has empty values.", itime+1);
                 char *buffer = malloc(needed + 1);
                 sprintf(buffer, "Time coordinate of '<xsl:value-of select="@name"/>' ('<xsl:value-of select="@name"/>(%d)/time') has empty values.", itime+1);

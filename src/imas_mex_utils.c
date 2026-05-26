@@ -27,53 +27,85 @@ int msglen = 0;                                     /*!< Length of the mex_errms
 int msg_haspathinfo = 0;
 
 
-/**
-   Convert integer to string
- */
-char * itoa(int num)
-{
-    int i, rem, len = 0, n;
-    
-    n = num;
-    while (n != 0)
-    {
-        len++;
-        n /= 10;
-    }
-    char * str = (char*)malloc(len);
-    for (i = 0; i < len; i++)
-    {
-        rem = num % 10;
-        num = num / 10;
-        str[len - (i + 1)] = rem + '0';
-    }
-    str[len] = '\0';
-    return str;
-}
+#ifdef _WIN32
+	#include <process.h>  // For _getpid()
 
-/**
-   Convert integer to string
- */
-int atoi(const char *s1)
-{
-    int sign = 1, number = 0, index = 0;
-    if(*s1 == '-'){
-        sign = -1;
-        index = 1;
-    }
-     
-    while(*s1 != '\0'){
-        if(*s1 >= '0' &&  *s1 <= '9'){
-            number = number*10 + *s1 - '0';
-        } else {
-            break;
-        }
-        *s1++;
-    }
- 
-    number = number * sign;
-    return number;
-}
+	// Windows implementation of gettimeofday
+	int gettimeofday(struct timeval *tv, void *tz) {
+		FILETIME ft;
+		unsigned __int64 tmpres = 0;
+		
+		GetSystemTimeAsFileTime(&ft);
+		
+		tmpres |= ft.dwHighDateTime;
+		tmpres <<= 32;
+		tmpres |= ft.dwLowDateTime;
+		
+		// Convert file time to unix epoch
+		tmpres /= 10;  // convert to microseconds
+		tmpres -= 11644473600000000ULL;  // Windows to UNIX epoch offset
+		
+		tv->tv_sec = (long)(tmpres / 1000000UL);
+		tv->tv_usec = (long)(tmpres % 1000000UL);
+		
+		return 0;
+	}
+
+	// Windows implementation of getpid
+	#define getpid _getpid
+
+	// Windows implementation of access
+	#define access _access
+	#define F_OK 0
+#else
+	/**
+	Convert integer to string
+	*/
+	char * itoa(int num)
+	{
+		int i, rem, len = 0, n;
+		
+		n = num;
+		while (n != 0)
+		{
+			len++;
+			n /= 10;
+		}
+		char * str = (char*)malloc(len);
+		for (i = 0; i < len; i++)
+		{
+			rem = num % 10;
+			num = num / 10;
+			str[len - (i + 1)] = rem + '0';
+		}
+		str[len] = '\0';
+		return str;
+	}
+
+	/**
+	Convert integer to string
+	*/
+	int atoi(const char *s1)
+	{
+		int sign = 1, number = 0, index = 0;
+		if(*s1 == '-'){
+			sign = -1;
+			index = 1;
+		}
+		
+		while(*s1 != '\0'){
+			if(*s1 >= '0' &&  *s1 <= '9'){
+				number = number*10 + *s1 - '0';
+			} else {
+				break;
+			}
+			*s1++;
+		}
+	
+		number = number * sign;
+		return number;
+	}
+#endif
 
 /**
    Concatenate two strings
@@ -127,8 +159,15 @@ char* generate_tmp_file()
 
 		unsigned long rnd = rand() ^ getpid();      // XOR random value with process id
 
-        char* rndstr = itoa(rnd);
-        fname=(char *)malloc( strlen(rndstr) + 1);
+		#ifdef _WIN32
+			/* Convert random number to string using sprintf instead of itoa */
+			char rndstr[32];  /* Enough for unsigned long */
+			sprintf(rndstr, "%lu", rnd);
+		#else
+			char* rndstr = itoa(rnd);
+			fname=(char *)malloc( strlen(rndstr) + 1);
+		#endif
+
         fname = concat(prefix, rndstr);
 
         int file_available_status = access(fname, F_OK); // returns 0 if the file exists and accessible and returns -1 if not exist
@@ -404,13 +443,16 @@ al_status_t data_to_mxArray(int datatype, int dim, void *array, int *size, mxArr
 				memcpy(mxGetData(*data), array, numel * dsize);
 			else {
 #if MX_HAS_INTERLEAVED_COMPLEX
-#error IMAS_MEX builds with interleaved complex API is not supported yet
 				memcpy(mxGetData(*data), array, numel * dsize * 2);
 #else
 				/* MATLAB complex data has two separate pointers for real and imaginary data (separate API) */
 				pr = mxGetData(*data);
-				pi = mxGetImagData(*data);
-				for (i = 0; i < numel; i++) {
+				pi = mxGetImagData(*data);			
+				if (!pr || !pi) {
+					mexErrMsgIdAndTxt("imas:mex", "Failed to allocate complex array data (pr=%p, pi=%p)", pr, pi);
+					return (al_status_t) {-1, "Failed to allocate complex array data"};
+				}				
+			    for (i = 0; i < numel; i++) {
 					pr[i] = ((double *) array)[2*i];
 					pi[i] = ((double *) array)[2*i+1];
 				}
@@ -486,13 +528,18 @@ al_status_t data_from_mxArray(int datatype, int dim, const mxArray * data, void 
 			*array = mxGetData(data);
 		else {
 #if MX_HAS_INTERLEAVED_COMPLEX
-#error IMAS_MEX builds with interleaved complex API is not supported yet
 			*array = mxGetData(data);
 #else
 			/* MATLAB complex data has two separate pointers for real and imaginary data (separate API) */
 			*array = malloc(numel*2*sizeof(double));
 			pr = mxGetData(data);
 			pi = mxGetImagData(data);
+			if (!pr || !pi) {
+				free(*array);
+				*array = NULL;
+				mexErrMsgIdAndTxt("imas:mex", "Input array is not properly complex (pr=%p, pi=%p)", pr, pi);
+				return (al_status_t) {-1, "Input array is not properly complex"};
+			}
 			for (i = 0; i < numel; i++) {
 				((double *) *array)[2*i] = pr[i];
 				((double *) *array)[2*i+1] = pi[i];
@@ -625,7 +672,12 @@ void getNodePath(char* path,
 		char* dataDictionaryVersion,
 		int k) {
 
+#ifdef _WIN32
+	/* Allocate pathTokens dynamically - MSVC doesn't support VLAs */
+	char** pathTokens = (char**)malloc(ancestors_count * sizeof(char*));
+#else
 	char* pathTokens[ancestors_count];
+#endif
 	char* nbc_versions[NBC_VERSIONS_MAX_COUNT];
 	char* nbc_previous_names[NBC_VERSIONS_MAX_COUNT];
 	char* pathToken =  malloc(ANCESTOR_NAME_MAX_LENGTH);
@@ -681,6 +733,10 @@ void getNodePath(char* path,
 		}
 		free(pathTokens[i]);
 	}
+	// TODO: free pathTokens elements in the loop above to avoid memory leak, but this causes an access violation on Windows, investigate further
+#ifdef _WIN32
+	free(pathTokens);
+#endif
 }
 
 /**
@@ -814,7 +870,12 @@ al_status_t my_al_read_data(struct imas_mex_actionInfo * action, struct imas_mex
 		else if (field->datatype == DOUBLE_DATA)
 			array = malloc(sizeof(double));
 		else if (field->datatype == COMPLEX_DATA)
+#ifdef _WIN32
+			/* Complex = real + imaginary parts, MSVC doesn't support _Complex keyword */
+			array = malloc(2 * sizeof(double));
+#else
 			array = malloc(sizeof(double _Complex));
+#endif
 	}
 
 	status = al_read_data(action->context, field->fieldPath, field->timebasePath, &array, field->datatype, field->dim, &dims[0]);
@@ -914,6 +975,7 @@ al_status_t my_al_write_data(struct imas_mex_actionInfo * action, struct imas_me
 	if (field->datatype == CHAR_DATA && field->dim == 2) {
 		if (mxIsCell(data)) {
 			if (status.code >= 0) status = cast_status = castCellToChar((mxArray **) &data);
+			if (data == NULL) return (al_status_t) {0,""};
 		}
 	}
 

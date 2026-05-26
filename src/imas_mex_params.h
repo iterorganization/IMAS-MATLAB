@@ -27,9 +27,12 @@ struct imas_mex_params {
   int verbosity;                              /*!< Controls the verbosity level of the interface, higher means more verbose. Minimum value is 0, maximum value is 4 (default: 0). */
 };
 
-/** \cond */
-extern struct imas_mex_params params;
-
+#ifdef _WIN32
+  /** \cond */
+  AL_MEX_EXPORT extern struct imas_mex_params params;
+#else
+  extern struct imas_mex_params params;
+#endif
 int setDefaultParams(void);
 /** \endcond */
 #endif

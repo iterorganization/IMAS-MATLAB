@@ -14,3 +14,7 @@ tests/IDS_list.h
 /html/
 /latex/
 CMakeUserPresets.json
+test-install
+.vscode/
+*.err
+*.out

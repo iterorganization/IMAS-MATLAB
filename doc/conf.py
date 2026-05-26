@@ -15,9 +15,21 @@ project = "MATLAB Access Layer"
 copyright = f"{datetime.datetime.now().year}, ITER Organization"
 author = "ITER Organization"
 
-version = subprocess.check_output(["git", "describe"]).decode().strip()
-last_tag = subprocess.check_output(["git", "describe", "--abbrev=0"]).decode().strip()
-is_develop = version != last_tag
+# Get version from git describe, with fallback if no tags exist
+try:
+    version = subprocess.check_output(["git", "describe"], stderr=subprocess.DEVNULL).decode().strip()
+except subprocess.CalledProcessError:
+    # If git describe fails (no tags), use a default version
+    version = "development"
+
+# Get last tag for develop check, with fallback
+try:
+    last_tag = subprocess.check_output(["git", "describe", "--abbrev=0"], stderr=subprocess.DEVNULL).decode().strip()
+except subprocess.CalledProcessError:
+    # If no tags exist, we're in development
+    last_tag = None
+
+is_develop = last_tag is None or version != last_tag
 
 html_context = {
     "is_develop": is_develop
@@ -39,14 +51,14 @@ extensions = [
 
 # todo_include_todos = True
 
-templates_path = ["./doc_common/templates"]
 # Note: exclude doc_common and plugins folders (which are symlinked by the CMake build)
+# Also exclude myenv (Python virtual environment)
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "doc_common", "plugins"]
 
 # -- RST snippets to include in every page -----------------------------------
 rst_epilog = """\
 .. |DD| replace:: `Data Dictionary`_
-.. _`Data Dictionary`: https://sharepoint.iter.org/departments/POP/CM/IMDesign/Data%20Model/CI/Latest.html
+.. _`Data Dictionary`: https://imas-data-dictionary.readthedocs.io/en/latest/
 """
 
 # -- sphinxcontrib.matlab configuration --------------------------------------
@@ -71,10 +83,10 @@ intersphinx_mapping = {
 
 html_theme = "sphinx_immaterial"
 html_theme_options = {
-    "repo_url": "https://git.iter.org/projects/IMAS/repos/access-layer",
+    "repo_url": "https://github.com/iterorganization/IMAS-MATLAB.git",
     "repo_name": "Access Layer",
     "icon": {
-        "repo": "fontawesome/brands/bitbucket",
+        "repo": "fontawesome/brands/github",
     },
     "features": [
         # "navigation.expand",

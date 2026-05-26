@@ -1,0 +1,20 @@
+{
+  "name": "imas-matlab",
+  "version": "1.0.0",
+  "description": "MATLAB High Level Interface of the IMAS Access Layer",
+  "dependencies": [
+    {
+      "name": "dlfcn-win32",
+      "platform": "windows"
+    },
+    "hdf5",
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
+    "boost-algorithm",
+    "boost-filesystem",
+    "boost-variant",
+    "pkgconf"
+  ]
+}

@@ -1,0 +1,59 @@
+# Shared options
+
+# Note: default options are also listed in the docs: doc_common/building_installing.rst
+# When changing default values, the documentation should be updated to reflect that.
+
+# Note: AL_DOWNLOAD_DEPENDENCIES is also shared, but needs to be set before this
+# repository is available, so not listing it here.
+
+option( BUILD_SHARED_LIBS "Build shared libraries" ON )
+option( AL_EXAMPLES "Build and test examples" ON )
+option( AL_TESTS "Build tests and enable test framework" ON )
+option( AL_PLUGINS "Enable plugin framework for tests and examples" OFF )
+option( AL_HLI_DOCS "Build the Sphinx-based High Level Interface documentation" OFF )
+option( AL_DOCS_ONLY "Don't build anything, except the Sphinx-based High Level Interface documentation" OFF )
+
+# Saxon XSLT processor has been replaced with Python saxonche
+# No longer need to find SaxonHE - saxonche is installed automatically via pip in virtual environments
+
+# if( NOT AL_DOWNLOAD_DEPENDENCIES )
+#   if( AL_DEVELOPMENT_LAYOUT )
+#     set( _DEV ON )
+#   else()
+#     set( _DEV OFF )
+#   endif()
+#   option( AL_DEVELOPMENT_LAYOUT "Look into parent directories for dependencies" ${_DEV} )
+# endif()
+
+# Enable CTest?
+if( AL_EXAMPLES OR AL_TESTS )
+    include( CTest )
+endif()
+
+# Allow configuration of repositories and branches for dependent packages
+################################################################################
+
+if( AL_DOWNLOAD_DEPENDENCIES )
+  if( ${AL_PLUGINS} )
+    # AL plugins
+    ##############################################################################
+    set(
+      AL_PLUGINS_GIT_REPOSITORY "https://github.com/iterorganization/IMAS-Core-Plugins.git"
+      CACHE STRING "Git repository of al-plugins"
+    )
+    set(
+      AL_PLUGINS_VERSION "main"
+      CACHE STRING "al-plugins version (tag or branch name) to use for this build"
+    )
+  endif()
+  # Data dictionary
+  ##############################################################################
+  set(
+    DD_GIT_REPOSITORY "https://github.com/iterorganization/IMAS-data-Dictionary.git"
+    CACHE STRING "Git repository of the Data Dictionary"
+  )
+  set(
+    DD_VERSION "main"
+    CACHE STRING "Data dictionary version (tag or branch name) to use for this build"
+  )
+endif()

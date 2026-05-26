@@ -184,7 +184,8 @@
     al_status_t status_end = {0,""};
     int putOpCtx = -1;
     int homogeneousTime = IDS_TIME_MODE_UNKNOWN;
-    /* Validation check for input schema */
+    /* Validation check for input schema (not supported on Windows) */
+#ifndef _WIN32
     al_validation_status_t status_val = {0,""};
     bool flag = is_validation_required();
     if(flag) {
@@ -197,6 +198,7 @@
 	mexWarnMsgIdAndTxt("IMAS:ids_validate:invalid_ids", "IDS <xsl:value-of select="@name"/> is found to be invalid . PUT quits with no action.");
 	return status;
     }
+#endif
     status = init_dataTree_write((mxArray *) ids);
     /* TODO: move these checks to external function? */
     if (status.code >= 0) status = getHomogeneousTime(&amp;homogeneousTime);

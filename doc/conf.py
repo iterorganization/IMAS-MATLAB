@@ -15,25 +15,23 @@ project = "MATLAB Access Layer"
 copyright = f"{datetime.datetime.now().year}, ITER Organization"
 author = "ITER Organization"
 
-# Get version from git describe, with fallback if no tags exist
+# Try to get version from git
 try:
-    version = subprocess.check_output(["git", "describe"], stderr=subprocess.DEVNULL).decode().strip()
-except subprocess.CalledProcessError:
-    # If git describe fails (no tags), use a default version
-    version = "development"
-
-# Get last tag for develop check, with fallback
-try:
+    full_version = subprocess.check_output(["git", "describe"], stderr=subprocess.DEVNULL).decode().strip()
     last_tag = subprocess.check_output(["git", "describe", "--abbrev=0"], stderr=subprocess.DEVNULL).decode().strip()
-except subprocess.CalledProcessError:
-    # If no tags exist, we're in development
-    last_tag = None
-
-is_develop = last_tag is None or version != last_tag
-
-html_context = {
-    "is_develop": is_develop
-}
+    is_develop = full_version != last_tag
+    # Use full version for both version and release when in development
+    if is_develop:
+        release = full_version  # Show full version like "5.5.2-12-g63bb0415"
+        version = full_version
+    else:
+        release = last_tag  # Show just the tag like "5.5.2"
+        version = last_tag
+except (subprocess.CalledProcessError, FileNotFoundError):
+    version = "dev"
+    release = "dev"
+    last_tag = "dev"
+    is_develop = True
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

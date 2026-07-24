@@ -39,12 +39,12 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
     
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     
@@ -61,7 +61,7 @@ jobs:
         echo "MATLAB_ROOT=$(dirname $(dirname $(which matlab)))" >> $GITHUB_ENV
     
     - name: Cache pip packages
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/requirements.txt') }}-${{ github.sha }}
@@ -183,7 +183,7 @@ jobs:
     - name: Cache Boost installation
       if: matrix.use_system_packages == false
       id: cache-boost
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: ~/boost
         key: boost-${{ env.BOOST_VERSION }}-${{ runner.os }}-${{ matrix.name }}-${{ github.sha }}
@@ -240,7 +240,7 @@ jobs:
     - name: Cache HDF5 installation
       if: matrix.use_system_packages == false
       id: cache-hdf5
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: ~/hdf5
         key: hdf5-${{ env.HDF5_VERSION }}-${{ runner.os }}-${{ matrix.name }}-${{ github.sha }}
@@ -415,10 +415,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
     
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     

@@ -49,7 +49,7 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
     
     - name: Set up MATLAB
-      uses: matlab-actions/setup-matlab@v3
+      uses: matlab-actions/setup-matlab@v3.0.1
       with:
         release: ${{ matrix.matlab_release }}
         products: MATLAB
